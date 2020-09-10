@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "FPGunActor.h"
 #include "HeroCharacter.generated.h"
 
 UCLASS()
@@ -17,10 +18,11 @@ class CPPGRID_API AHeroCharacter : public ACharacter
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 	class USkeletalMeshComponent* Mesh1P;
+	
+	UPROPERTY(EditAnywhere, Category = Weapon, meta = (AllowPrivateAcess = "true"))
+	TSubclassOf<class AFPGunActor> SpawnInfoFP_Gun;
 
-	/** Gun mesh: 1st person view (seen only by self) */
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	class USkeletalMeshComponent* FP_Gun;
+	class AFPGunActor* FP_Gun;
 
 public:
 	// Sets default values for this character's properties
