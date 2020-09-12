@@ -19,8 +19,8 @@ AProjectileActor::AProjectileActor()
 
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
 	ProjectileMovementComponent->SetUpdatedComponent(SphereCollider);
-	ProjectileMovementComponent->InitialSpeed = 500.0f;
-	ProjectileMovementComponent->MaxSpeed = 500.0f;
+	ProjectileMovementComponent->InitialSpeed = 3000.0f;
+	ProjectileMovementComponent->MaxSpeed = 3000.0f;
 	ProjectileMovementComponent->bRotationFollowsVelocity = true;
 	
 

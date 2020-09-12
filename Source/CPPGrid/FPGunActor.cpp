@@ -33,6 +33,7 @@ void AFPGunActor::BeginPlay()
 	{
 		FireRate = 1.f;
 	}
+
 }
 
 // Called every frame
@@ -44,42 +45,63 @@ void AFPGunActor::Tick(float DeltaTime)
 
 void AFPGunActor::Fire()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Orange, __FUNCTION__);
-	//Spawn Projectile
+	// If BP class to spawn was defined Spawn Projectile
 	if (SpawnInfoProjectile)
 	{
+		//Prepare Spawn parameters
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.Owner = this;
-		SpawnParams.Instigator = Instigator;
+		//Use GetInstigator for foward compatibility
+		SpawnParams.Instigator = GetInstigator();
 
-		//Rotator and SpawnLocation need to be defined by camera instead of MuzzleSocket...
-		FRotator Rotator = FP_Gun->GetSocketRotation("Muzzle");
-		FVector SpawnLocation = FP_Gun->GetSocketLocation("Muzzle") + (Rotator.Vector() * 10.0f);
-
-		AProjectileActor* Projectile = GetWorld()->SpawnActor<AProjectileActor>(SpawnInfoProjectile, SpawnLocation, Rotator, SpawnParams);
-		if (Projectile)
+		//If cast was sucefull
+		if (CameraReference)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Orange, "Got here");
+			//Get camera Location from player character
+			FVector CameraLocation = CameraReference->GetComponentLocation();
+			//Get camera Rotation from player character
+			FRotator CameraRotation = CameraReference->GetComponentRotation();
+			
+			//Determine Spawn location using offset
+			FVector MuzzleLocation = CameraLocation + FTransform(CameraRotation).TransformVector(MuzzleOffset);
+			FRotator MuzzleRotation = CameraRotation;
 
-			FVector LaunchDirection = Rotator.Vector();
-			Projectile->FireInDirection(LaunchDirection);
+			//Spawn projectile
+			AProjectileActor* Projectile = GetWorld()->SpawnActor<AProjectileActor>(SpawnInfoProjectile, MuzzleLocation, MuzzleRotation, SpawnParams);
+			
+			//If Spawn was sucefull we should have a pointer to the projectile
+			if (Projectile)
+			{
+				//Set the direction for the projectile velocity
+				FVector LaunchDirection = MuzzleRotation.Vector();
+				//Fire Projectile
+				Projectile->FireInDirection(LaunchDirection);
+			}
 		}
-		
 	}
 }
 
 void AFPGunActor::ActivateTrigger()
 {
+	// Fire Once
 	Fire();
 	
+	// And Set timer for auto fire
 	GetWorld()->GetTimerManager().SetTimer(AutofireTimerHandle, this, &AFPGunActor::Fire, FireRate, true);
 }
 
 void AFPGunActor::DeactivateTrigger()
 {
+	// If timer is active, clear it
 	if (GetWorld()->GetTimerManager().IsTimerActive(AutofireTimerHandle))
 	{
 		GetWorld()->GetTimerManager().ClearTimer(AutofireTimerHandle);
 	}
+	// If timer is not active but not clear it will be substituted by a new one when the timer is set
+	// So we only need to check if it is active
 }
 
+void AFPGunActor::SetCameraReference(UCameraComponent* InCamera)
+{
+	CameraReference = InCamera;
+}
