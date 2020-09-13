@@ -2,6 +2,8 @@
 
 
 #include "ProjectileActor.h"
+#include "DamageableActorInterface.h"
+#include "Engine.h"
 
 // Sets default values
 AProjectileActor::AProjectileActor()
@@ -10,8 +12,11 @@ AProjectileActor::AProjectileActor()
 	PrimaryActorTick.bCanEverTick = true;
 	
 	SphereCollider = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere Component"));
-	SphereCollider->InitSphereRadius(15.0f);
+	SphereCollider->InitSphereRadius(18.0f);
 	RootComponent = SphereCollider;
+	SphereCollider->SetNotifyRigidBodyCollision(true);
+	
+	DamagePoints = 10.0f;// Default DamagePoints value
 
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh"));
 	ProjectileMesh->SetCollisionProfileName("NoCollision");
@@ -19,8 +24,8 @@ AProjectileActor::AProjectileActor()
 
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
 	ProjectileMovementComponent->SetUpdatedComponent(SphereCollider);
-	ProjectileMovementComponent->InitialSpeed = 3000.0f;
-	ProjectileMovementComponent->MaxSpeed = 3000.0f;
+	ProjectileMovementComponent->InitialSpeed = 5000.0f;
+	ProjectileMovementComponent->MaxSpeed = 5000.0f;
 	ProjectileMovementComponent->bRotationFollowsVelocity = true;
 	
 
@@ -30,6 +35,11 @@ AProjectileActor::AProjectileActor()
 void AProjectileActor::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	SetLifeSpan(2.0f);
+
+	// SphereCollider OnComponentHit set here com compatibility with previously created blueprints
+	SphereCollider->OnComponentHit.AddDynamic(this, &AProjectileActor::OnCompHit);
 	
 }
 
@@ -47,3 +57,17 @@ void AProjectileActor::FireInDirection(const FVector& ShootDirection)
 	
 }
 
+void AProjectileActor::OnCompHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	// Is Actor damageable?
+	if (OtherActor->Implements<UDamageableActorInterface>())
+	{
+		// Execute damage
+		Cast<IDamageableActorInterface>(OtherActor)->ResolveDamage(DamagePoints);
+	}
+
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, TEXT("HIT"));
+	Destroy();
+	
+}

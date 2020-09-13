@@ -6,10 +6,11 @@
 #include "Components/TimelineComponent.h"
 #include "GameFramework/Actor.h"
 #include "Components/SphereComponent.h"
+#include "DamageableActorInterface.h"
 #include "EnemyActor.generated.h"
 
 UCLASS()
-class CPPGRID_API AEnemyActor : public AActor
+class CPPGRID_API AEnemyActor : public AActor, public IDamageableActorInterface
 {
 	GENERATED_BODY()
 
@@ -18,6 +19,10 @@ class CPPGRID_API AEnemyActor : public AActor
 
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 	USphereComponent* SceneRoot;
+
+	// Set HealthPoints on Blueprint instance
+	UPROPERTY(EditAnywhere, Category = Gameplay, meta = (AllowPrivateAcess = "true"))
+	float HealthPoints;
 	
 public:	
 	// Sets default values for this actor's properties
@@ -48,4 +53,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// Pure c++ interface function
+	virtual void ResolveDamage(float Damage) override;
 };

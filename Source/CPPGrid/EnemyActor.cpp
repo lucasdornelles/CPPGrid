@@ -14,6 +14,8 @@ AEnemyActor::AEnemyActor()
 
 	RootComponent = SceneRoot;
 
+	HealthPoints = 100.0f;// Default HealthPoints value
+
 	EnemyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("EnemyMesh"));
 	EnemyMesh->SetupAttachment(SceneRoot);
 
@@ -58,4 +60,16 @@ void AEnemyActor::TimelineProgress(float Value)
 {
 	FVector NewLocation = FMath::Lerp(StartLocation, EndLocation, Value);
 	SetActorLocation(NewLocation);
+}
+
+// Receive Damage
+void AEnemyActor::ResolveDamage(float Damage)
+{
+	// Lower Health
+	HealthPoints -= Damage;
+	// Destroy is less than zero
+	if (HealthPoints <= 0.0f)
+	{
+		Destroy();
+	}
 }

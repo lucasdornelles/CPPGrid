@@ -16,7 +16,10 @@ class CPPGRID_API AProjectileActor : public AActor
 
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 	UStaticMeshComponent* ProjectileMesh;
-	
+
+	// Set DamagePoints on Blueprint instance
+	UPROPERTY(EditAnywhere, Category = Gameplay, meta = (AllowPrivateAcess = "true"))
+	float DamagePoints;
 	
 public:	
 	// Sets default values for this actor's properties
@@ -37,5 +40,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = Movement)
 	UProjectileMovementComponent* ProjectileMovementComponent;
+
+	UFUNCTION()
+	void OnCompHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
+		UPrimitiveComponent* OtherComp, FVector NormalImpulse,const FHitResult& Hit);
 
 };
