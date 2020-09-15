@@ -20,7 +20,7 @@ AEnemyActor::AEnemyActor()
 	HealthPoints = 100.0f;// Default HealthPoints value
 
 	EnemyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("EnemyMesh"));
-	EnemyMesh->SetupAttachment(SceneRoot);
+	EnemyMesh->SetupAttachment(RootComponent);
 
 	VisionCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("VisionCapsule"));
 	VisionCapsule->SetupAttachment(RootComponent);
