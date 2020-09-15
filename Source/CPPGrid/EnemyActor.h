@@ -6,6 +6,7 @@
 #include "Components/TimelineComponent.h"
 #include "GameFramework/Actor.h"
 #include "Components/SphereComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "DamageableActorInterface.h"
 #include "EnemyActor.generated.h"
 
@@ -19,6 +20,10 @@ class CPPGRID_API AEnemyActor : public AActor, public IDamageableActorInterface
 
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 	USphereComponent* SceneRoot;
+
+	// PlayerPerception Capsule
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+	UCapsuleComponent* VisionCapsule;
 
 	// Set HealthPoints on Blueprint instance
 	UPROPERTY(EditAnywhere, Category = Gameplay, meta = (AllowPrivateAcess = "true"))
@@ -55,4 +60,15 @@ public:
 
 	// Pure c++ interface function
 	virtual void ResolveDamage(float Damage) override;
+
+	class ACharacter* PlayerCharacterRef;
+
+private:
+	bool IsPlayerVisible;
+
+	// Overlap Event
+	UFUNCTION()
+	void VisionCapsuleOverlap(UPrimitiveComponent * OverlapComponent,
+		AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
 };

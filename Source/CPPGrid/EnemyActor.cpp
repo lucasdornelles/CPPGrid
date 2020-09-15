@@ -2,6 +2,9 @@
 
 
 #include "EnemyActor.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "GameFramework/Character.h"
 #include "Components/StaticMeshComponent.h"
 
 // Sets default values
@@ -19,14 +22,20 @@ AEnemyActor::AEnemyActor()
 	EnemyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("EnemyMesh"));
 	EnemyMesh->SetupAttachment(SceneRoot);
 
-
+	VisionCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("VisionCapsule"));
+	VisionCapsule->SetupAttachment(RootComponent);
+	VisionCapsule->InitCapsuleSize(400.0f, 800.0f);
 
 }
 
 // Called when the game starts or when spawned
 void AEnemyActor::BeginPlay()
 {
+	IsPlayerVisible = false;
 	Super::BeginPlay();
+
+	// Attach overlap event to OnComponentOverlap
+	VisionCapsule->OnComponentBeginOverlap.AddDynamic(this, &AEnemyActor::VisionCapsuleOverlap);
 	
 	if (CurveFloat)
 	{
@@ -47,6 +56,15 @@ void AEnemyActor::BeginPlay()
 
 		CurveTimeline.PlayFromStart();
 	}
+
+	// Try to get player character
+	ACharacter*  PlayerPointer = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	if (PlayerPointer)
+	{
+		// If it succeds set player character reference, no need to cast
+		PlayerCharacterRef = PlayerPointer;
+	}
+
 }
 
 // Called every frame
@@ -54,6 +72,13 @@ void AEnemyActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	CurveTimeline.TickTimeline(DeltaTime);
+
+	if (IsPlayerVisible)
+	{
+		// If player is visible look at player
+		SetActorRotation(UKismetMathLibrary::FindLookAtRotation(GetActorLocation(),
+			PlayerCharacterRef->GetActorLocation()));
+	}
 }
 
 void AEnemyActor::TimelineProgress(float Value)
@@ -65,11 +90,27 @@ void AEnemyActor::TimelineProgress(float Value)
 // Receive Damage
 void AEnemyActor::ResolveDamage(float Damage)
 {
+	if (!IsPlayerVisible)
+	{
+		// If hit player character is visible
+		IsPlayerVisible = true;
+	}
+
 	// Lower Health
 	HealthPoints -= Damage;
 	// Destroy is less than zero
 	if (HealthPoints <= 0.0f)
 	{
 		Destroy();
+	}
+}
+
+void AEnemyActor::VisionCapsuleOverlap(UPrimitiveComponent * OverlapComponent,
+	AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
+	if (OtherActor == PlayerCharacterRef)
+	{
+		// if overlaping actor is player character player character is visible
+		IsPlayerVisible = true;
 	}
 }
