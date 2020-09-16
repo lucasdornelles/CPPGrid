@@ -6,6 +6,12 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/Character.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/ArrowComponent.h"
+#include "Components/SphereComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "Engine.h"
+#include "ProjectileActor.h"
+
 
 // Sets default values
 AEnemyActor::AEnemyActor()
@@ -25,6 +31,11 @@ AEnemyActor::AEnemyActor()
 	VisionCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("VisionCapsule"));
 	VisionCapsule->SetupAttachment(RootComponent);
 	VisionCapsule->InitCapsuleSize(400.0f, 800.0f);
+
+	ArrowComponent = CreateDefaultSubobject<UArrowComponent>(TEXT("ArrowComponent"));
+	ArrowComponent->SetupAttachment(RootComponent);
+
+	IsFiring = false;
 
 }
 
@@ -57,6 +68,15 @@ void AEnemyActor::BeginPlay()
 		CurveTimeline.PlayFromStart();
 	}
 
+	if (FirePerSecond)
+	{
+		FireRate = 1.f / FirePerSecond;
+	}
+	else
+	{
+		FireRate = 1.f;
+	}
+
 	// Try to get player character
 	ACharacter*  PlayerPointer = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 	if (PlayerPointer)
@@ -78,6 +98,17 @@ void AEnemyActor::Tick(float DeltaTime)
 		// If player is visible look at player
 		SetActorRotation(UKismetMathLibrary::FindLookAtRotation(GetActorLocation(),
 			PlayerCharacterRef->GetActorLocation()));
+
+		if (!IsFiring)
+		{
+			UWorld* World = GetWorld();
+			if (World)
+			{
+				World->GetTimerManager().SetTimer(AutofireTimerHandle, this, &AEnemyActor::Fire, FireRate, true);
+
+			}
+			IsFiring = true;
+		}
 	}
 }
 
@@ -101,6 +132,10 @@ void AEnemyActor::ResolveDamage(float Damage)
 	// Destroy is less than zero
 	if (HealthPoints <= 0.0f)
 	{
+		if (GetWorld()->GetTimerManager().IsTimerActive(AutofireTimerHandle))
+		{
+			GetWorld()->GetTimerManager().ClearTimer(AutofireTimerHandle);
+		}
 		Destroy();
 	}
 }
@@ -112,5 +147,31 @@ void AEnemyActor::VisionCapsuleOverlap(UPrimitiveComponent * OverlapComponent,
 	{
 		// if overlaping actor is player character player character is visible
 		IsPlayerVisible = true;
+	}
+}
+
+void AEnemyActor::Fire()
+{
+	if (SpawnInfoProjectile)
+	{
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+		SpawnParams.Instigator = GetInstigator();
+
+		FVector SpawnLocation = ArrowComponent->GetComponentLocation();
+		FRotator SpawnRotator = ArrowComponent->GetComponentRotation();
+		FVector LaunchDirection = SpawnRotator.Vector();
+
+		UWorld* World = GetWorld();
+		if (World)
+		{
+
+			AProjectileActor* Projectile = World->SpawnActor<AProjectileActor>(SpawnInfoProjectile, SpawnLocation, SpawnRotator, SpawnParams);
+
+			if (Projectile)
+			{
+				Projectile->FireInDirection(LaunchDirection);
+			}
+		}
 	}
 }

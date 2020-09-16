@@ -5,10 +5,14 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "FPGunActor.h"
+#include "DamageableActorInterface.h"
+#include "Components/TimelineComponent.h"
 #include "HeroCharacter.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerDeath);
+
 UCLASS()
-class CPPGRID_API AHeroCharacter : public ACharacter
+class CPPGRID_API AHeroCharacter : public ACharacter, public IDamageableActorInterface
 {
 	GENERATED_BODY()
 
@@ -18,11 +22,31 @@ class CPPGRID_API AHeroCharacter : public ACharacter
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 	class USkeletalMeshComponent* Mesh1P;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+	class UCapsuleComponent* CharacterHitbox;
 	
 	UPROPERTY(EditAnywhere, Category = Weapon, meta = (AllowPrivateAcess = "true"))
 	TSubclassOf<class AFPGunActor> SpawnInfoFP_Gun;
 
 	class AFPGunActor* FP_Gun;
+
+	// Set HealthPoints on Blueprint instance
+	UPROPERTY(EditAnywhere, Category = Gameplay, meta = (AllowPrivateAcess = "true"))
+	float HealthPoints;
+
+	UPROPERTY(EditAnywhere, Category = Gameplay, meta = (AllowPrivateAcess = "true"))
+	float RestoredHP;
+
+	UPROPERTY(EditAnywhere, Category = Gameplay, meta = (AllowPrivateAcess = "true"))
+	float RestoreSpeed;
+
+	float CurrentHealth;
+
+	// Timer for restore health
+	FTimerHandle RestoreHealthTimerHandle;
+
+	FOnPlayerDeath PlayerDeath;
 
 public:
 	// Sets default values for this character's properties
@@ -54,6 +78,11 @@ public:
 	float BaseSprintSpeed;
 
 	bool IsFiring;
+
+	void RestoreHealth();
+
+	// Pure c++ interface function
+	virtual void ResolveDamage(float Damage) override;
 
 protected:
 
@@ -91,5 +120,9 @@ protected:
 	void StartFire();
 
 	void EndFire();
+
+private:
+
+	bool IsRestoringHealth;
 
 };

@@ -3,11 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/TimelineComponent.h"
 #include "GameFramework/Actor.h"
-#include "Components/SphereComponent.h"
-#include "Components/CapsuleComponent.h"
 #include "DamageableActorInterface.h"
+#include "Components/TimelineComponent.h"
 #include "EnemyActor.generated.h"
 
 UCLASS()
@@ -19,15 +17,31 @@ class CPPGRID_API AEnemyActor : public AActor, public IDamageableActorInterface
 	class UStaticMeshComponent* EnemyMesh;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	USphereComponent* SceneRoot;
+	class USphereComponent* SceneRoot;
 
 	// PlayerPerception Capsule
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	UCapsuleComponent* VisionCapsule;
+	class UCapsuleComponent* VisionCapsule;
 
 	// Set HealthPoints on Blueprint instance
 	UPROPERTY(EditAnywhere, Category = Gameplay, meta = (AllowPrivateAcess = "true"))
 	float HealthPoints;
+
+	// Arrow Component for firing projectile
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+	class UArrowComponent* ArrowComponent;
+
+	// Timer for auto fire
+	FTimerHandle AutofireTimerHandle;
+
+	UPROPERTY(EditAnywhere, Category = Weapon, meta = (AllowPrivateAcess = "true"))
+	float FirePerSecond;
+
+	float FireRate;
+
+	// BP class of Projectile to be spawned
+	UPROPERTY(EditAnywhere, Category = Weapon, meta = (AllowPrivateAcess = "true"))
+	TSubclassOf<class AProjectileActor> SpawnInfoProjectile;
 	
 public:	
 	// Sets default values for this actor's properties
@@ -61,6 +75,8 @@ public:
 	// Pure c++ interface function
 	virtual void ResolveDamage(float Damage) override;
 
+	void Fire();
+
 	class ACharacter* PlayerCharacterRef;
 
 private:
@@ -70,5 +86,7 @@ private:
 	UFUNCTION()
 	void VisionCapsuleOverlap(UPrimitiveComponent * OverlapComponent,
 		AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
+	bool IsFiring;
 
 };

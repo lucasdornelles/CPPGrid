@@ -7,6 +7,8 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Engine.h"
+//Engine is temporary
 
 // Sets default values
 AHeroCharacter::AHeroCharacter()
@@ -34,6 +36,16 @@ AHeroCharacter::AHeroCharacter()
 	Mesh1P->CastShadow = false;
 	Mesh1P->SetRelativeRotation(FRotator(1.9f, -15.0f, 7.2f));
 	Mesh1P->SetRelativeLocation(FVector(-0.5f, -4.4f, -155.7f));
+
+	CharacterHitbox = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CharacterHitbox"));
+	CharacterHitbox->SetupAttachment(RootComponent);
+	CharacterHitbox->InitCapsuleSize(55.f, 96.0f);
+	CharacterHitbox->SetCollisionProfileName("CharacterHitbox");
+
+	HealthPoints = 100.0f;// Default HealthPoints value
+
+	RestoredHP = 10.0f;// Default HP restore
+	RestoreSpeed = 0.5f;// Default restore Speed
 	
 }
 
@@ -55,6 +67,8 @@ void AHeroCharacter::BeginPlay()
 
 		FP_Gun->SetCameraReference(FirstPersonCameraComponent);
 	}
+
+	CurrentHealth = HealthPoints;
 }
 
 // Called every frame
@@ -146,4 +160,55 @@ void AHeroCharacter::StartSprint()
 void AHeroCharacter::StopSprint()
 {
 	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
+}
+
+void AHeroCharacter::ResolveDamage(float Damage)
+{
+	CurrentHealth -= Damage;
+
+	if (!IsRestoringHealth)
+	{
+		UWorld* World = GetWorld();
+		if (World)
+		{
+			World->GetTimerManager().SetTimer(RestoreHealthTimerHandle,
+				this, &AHeroCharacter::RestoreHealth, RestoreSpeed, true);
+		}
+	}
+	if (CurrentHealth <= 0.0f)
+	{
+		CurrentHealth = 0.0f;
+		UWorld* World = GetWorld();
+		if (World)
+		{
+			if (World->GetTimerManager().IsTimerActive(RestoreHealthTimerHandle))
+			{
+				World->GetTimerManager().ClearTimer(RestoreHealthTimerHandle);
+				IsRestoringHealth = false;
+			}
+		}
+
+		PlayerDeath.Broadcast();
+	}
+}
+
+void AHeroCharacter::RestoreHealth()
+{
+	IsRestoringHealth = true;
+	CurrentHealth += RestoredHP;
+
+	if (CurrentHealth >= HealthPoints)
+	{
+		CurrentHealth = HealthPoints;
+		
+		UWorld* World = GetWorld();
+		if (World)
+		{
+			if (World->GetTimerManager().IsTimerActive(RestoreHealthTimerHandle))
+			{
+				World->GetTimerManager().ClearTimer(RestoreHealthTimerHandle);
+				IsRestoringHealth = false;
+			}
+		}
+	}
 }

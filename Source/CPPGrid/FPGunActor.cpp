@@ -67,15 +67,20 @@ void AFPGunActor::Fire()
 			FRotator MuzzleRotation = CameraRotation;
 
 			//Spawn projectile
-			AProjectileActor* Projectile = GetWorld()->SpawnActor<AProjectileActor>(SpawnInfoProjectile, MuzzleLocation, MuzzleRotation, SpawnParams);
-			
-			//If Spawn was sucefull we should have a pointer to the projectile
-			if (Projectile)
+
+			UWorld* World = GetWorld();
+			if (World)
 			{
-				//Set the direction for the projectile velocity
-				FVector LaunchDirection = MuzzleRotation.Vector();
-				//Fire Projectile
-				Projectile->FireInDirection(LaunchDirection);
+				AProjectileActor* Projectile = World->SpawnActor<AProjectileActor>(SpawnInfoProjectile, MuzzleLocation, MuzzleRotation, SpawnParams);
+
+				//If Spawn was sucefull we should have a pointer to the projectile
+				if (Projectile)
+				{
+					//Set the direction for the projectile velocity
+					FVector LaunchDirection = MuzzleRotation.Vector();
+					//Fire Projectile
+					Projectile->FireInDirection(LaunchDirection);
+				}
 			}
 		}
 	}
