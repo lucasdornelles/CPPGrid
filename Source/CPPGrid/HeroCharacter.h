@@ -46,7 +46,7 @@ class CPPGRID_API AHeroCharacter : public ACharacter, public IDamageableActorInt
 	// Timer for restore health
 	FTimerHandle RestoreHealthTimerHandle;
 
-	FOnPlayerDeath PlayerDeath;
+	
 
 public:
 	// Sets default values for this character's properties
@@ -62,6 +62,8 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	FOnPlayerDeath PlayerDeath;
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)

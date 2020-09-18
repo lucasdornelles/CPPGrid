@@ -8,7 +8,7 @@ public class CPPGrid : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "AIModule" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "AIModule", "HeadMountedDisplay", "MoviePlayer", "SlateCore" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 

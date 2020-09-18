@@ -164,31 +164,41 @@ void AHeroCharacter::StopSprint()
 
 void AHeroCharacter::ResolveDamage(float Damage)
 {
-	CurrentHealth -= Damage;
+	// Only resolve damage if health is higher than zero to prevend broadcasting death multiple times
+	if (CurrentHealth > 0.0f)
+	{
+		CurrentHealth -= Damage;
 
-	if (!IsRestoringHealth)
-	{
-		UWorld* World = GetWorld();
-		if (World)
+		if (!IsRestoringHealth)
 		{
-			World->GetTimerManager().SetTimer(RestoreHealthTimerHandle,
-				this, &AHeroCharacter::RestoreHealth, RestoreSpeed, true);
-		}
-	}
-	if (CurrentHealth <= 0.0f)
-	{
-		CurrentHealth = 0.0f;
-		UWorld* World = GetWorld();
-		if (World)
-		{
-			if (World->GetTimerManager().IsTimerActive(RestoreHealthTimerHandle))
+			UWorld* World = GetWorld();
+			if (World)
 			{
-				World->GetTimerManager().ClearTimer(RestoreHealthTimerHandle);
-				IsRestoringHealth = false;
+				World->GetTimerManager().SetTimer(RestoreHealthTimerHandle,
+					this, &AHeroCharacter::RestoreHealth, RestoreSpeed, true);
 			}
 		}
+		if (CurrentHealth <= 0.0f)
+		{
+			CurrentHealth = 0.0f;
+			UWorld* World = GetWorld();
+			if (World)
+			{
+				if (World->GetTimerManager().IsTimerActive(RestoreHealthTimerHandle))
+				{
+					World->GetTimerManager().ClearTimer(RestoreHealthTimerHandle);
+					IsRestoringHealth = false;
+				}
+			}
 
-		PlayerDeath.Broadcast();
+			if (IsFiring)
+			{
+				EndFire();
+			}
+
+			PlayerDeath.Broadcast();
+
+		}
 	}
 }
 

@@ -13,5 +13,22 @@ UCLASS()
 class CPPGRID_API AGameplayGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
+
+public:
+
+	virtual void BeginPlay() override;
+
+private:
+
+	class AHeroCharacter* PlayerCharacter;
+
+	void PossesCheckpoint();
+
+	void StopEnemyFire();
+
+public:
+
+	UFUNCTION()
+	void PlayerCharacterDeath();
 	
 };

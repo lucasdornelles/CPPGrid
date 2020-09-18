@@ -44,6 +44,7 @@ void AEnemyActor::BeginPlay()
 {
 	IsPlayerVisible = false;
 	Super::BeginPlay();
+	BeginPlayRotator = GetActorRotation();
 
 	// Attach overlap event to OnComponentOverlap
 	VisionCapsule->OnComponentBeginOverlap.AddDynamic(this, &AEnemyActor::VisionCapsuleOverlap);
@@ -132,11 +133,15 @@ void AEnemyActor::ResolveDamage(float Damage)
 	// Destroy is less than zero
 	if (HealthPoints <= 0.0f)
 	{
-		if (GetWorld()->GetTimerManager().IsTimerActive(AutofireTimerHandle))
+		UWorld* World = GetWorld();
+		if (World)
 		{
-			GetWorld()->GetTimerManager().ClearTimer(AutofireTimerHandle);
+			if (World->GetTimerManager().IsTimerActive(AutofireTimerHandle))
+			{
+				World->GetTimerManager().ClearTimer(AutofireTimerHandle);
+			}
+			Destroy();
 		}
-		Destroy();
 	}
 }
 
@@ -174,4 +179,27 @@ void AEnemyActor::Fire()
 			}
 		}
 	}
+}
+
+void AEnemyActor::ResetEnemy()
+{
+	if (IsPlayerVisible)
+	{
+		IsPlayerVisible = false;
+	}
+
+	if (IsFiring)
+	{
+		UWorld* World = GetWorld();
+		if (World)
+		{
+			if (World->GetTimerManager().IsTimerActive(AutofireTimerHandle))
+			{
+				World->GetTimerManager().ClearTimer(AutofireTimerHandle);
+				IsFiring = false;
+			}
+		}
+	}
+	
+	SetActorRotation(BeginPlayRotator);
 }
