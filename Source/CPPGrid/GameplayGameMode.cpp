@@ -5,6 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "CheckpointPawn.h"
 #include "HeroCharacter.h"
+#include "GameplayHUD.h"
 #include "EnemyActor.h"
 
 void AGameplayGameMode::BeginPlay()
@@ -46,4 +47,5 @@ void AGameplayGameMode::PlayerCharacterDeath()
 	PlayerCharacter->SetActorHiddenInGame(true);
 	StopEnemyFire();
 	PossesCheckpoint();
+	
 }

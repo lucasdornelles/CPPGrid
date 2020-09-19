@@ -23,7 +23,10 @@ public:
 
 	virtual void NativeConstruct() override;
 
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	class UTextBlock* HealthText;
 	
+	UFUNCTION()
+	void UpdateHealthText(int32 NewValue);
 	
 };

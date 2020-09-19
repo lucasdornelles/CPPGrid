@@ -11,5 +11,9 @@ UGameplayWidget::UGameplayWidget(const FObjectInitializer& ObjectInitializer) : 
 void UGameplayWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+}
 
+void UGameplayWidget::UpdateHealthText(int32 NewValue)
+{
+	HealthText->SetText(FText::FromString(FString::FromInt(NewValue)));
 }

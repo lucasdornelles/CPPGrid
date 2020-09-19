@@ -41,7 +41,7 @@ class CPPGRID_API AHeroCharacter : public ACharacter, public IDamageableActorInt
 	UPROPERTY(EditAnywhere, Category = Gameplay, meta = (AllowPrivateAcess = "true"))
 	float RestoreSpeed;
 
-	float CurrentHealth;
+	
 
 	// Timer for restore health
 	FTimerHandle RestoreHealthTimerHandle;
@@ -51,6 +51,8 @@ class CPPGRID_API AHeroCharacter : public ACharacter, public IDamageableActorInt
 public:
 	// Sets default values for this character's properties
 	AHeroCharacter();
+
+	float CurrentHealth;
 
 protected:
 	// Called when the game starts or when spawned
@@ -126,5 +128,7 @@ protected:
 private:
 
 	bool IsRestoringHealth;
+
+	void UpdateUIHealth(float newValue);
 
 };

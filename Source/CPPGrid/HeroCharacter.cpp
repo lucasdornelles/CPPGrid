@@ -7,6 +7,7 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "GameplayHUD.h"
 #include "Engine.h"
 //Engine is temporary
 
@@ -69,6 +70,7 @@ void AHeroCharacter::BeginPlay()
 	}
 
 	CurrentHealth = HealthPoints;
+	UpdateUIHealth(CurrentHealth);
 }
 
 // Called every frame
@@ -168,6 +170,7 @@ void AHeroCharacter::ResolveDamage(float Damage)
 	if (CurrentHealth > 0.0f)
 	{
 		CurrentHealth -= Damage;
+		UpdateUIHealth(CurrentHealth);
 
 		if (!IsRestoringHealth)
 		{
@@ -206,6 +209,7 @@ void AHeroCharacter::RestoreHealth()
 {
 	IsRestoringHealth = true;
 	CurrentHealth += RestoredHP;
+	
 
 	if (CurrentHealth >= HealthPoints)
 	{
@@ -220,5 +224,16 @@ void AHeroCharacter::RestoreHealth()
 				IsRestoringHealth = false;
 			}
 		}
+	}
+	UpdateUIHealth(CurrentHealth);
+}
+
+void AHeroCharacter::UpdateUIHealth(float NewValue)
+{
+	AGameplayHUD* GameplayHUD = Cast<AGameplayHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	if (GameplayHUD)
+	{
+		int32 IntValue = (int32)NewValue;
+		GameplayHUD->UpdateHealthText(IntValue);
 	}
 }
