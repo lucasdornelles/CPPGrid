@@ -23,7 +23,7 @@ AEnemyActor::AEnemyActor()
 
 	RootComponent = SceneRoot;
 
-	HealthPoints = 100.0f;// Default HealthPoints value
+	HealthPoints = 100;// Default HealthPoints value
 
 	EnemyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("EnemyMesh"));
 	EnemyMesh->SetupAttachment(RootComponent);
@@ -120,7 +120,7 @@ void AEnemyActor::TimelineProgress(float Value)
 }
 
 // Receive Damage
-void AEnemyActor::ResolveDamage(float Damage)
+void AEnemyActor::ResolveDamage(int32 Damage)
 {
 	if (!IsPlayerVisible)
 	{
@@ -131,7 +131,7 @@ void AEnemyActor::ResolveDamage(float Damage)
 	// Lower Health
 	HealthPoints -= Damage;
 	// Destroy is less than zero
-	if (HealthPoints <= 0.0f)
+	if (HealthPoints <= 0)
 	{
 		UWorld* World = GetWorld();
 		if (World)

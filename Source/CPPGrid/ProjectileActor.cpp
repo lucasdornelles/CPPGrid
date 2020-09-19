@@ -16,7 +16,7 @@ AProjectileActor::AProjectileActor()
 	RootComponent = SphereCollider;
 	SphereCollider->SetNotifyRigidBodyCollision(true);
 	
-	DamagePoints = 10.0f;// Default DamagePoints value
+	DamagePoints = 10;// Default DamagePoints value
 
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh"));
 	ProjectileMesh->SetCollisionProfileName("NoCollision");

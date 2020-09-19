@@ -43,9 +43,9 @@ AHeroCharacter::AHeroCharacter()
 	CharacterHitbox->InitCapsuleSize(55.f, 96.0f);
 	CharacterHitbox->SetCollisionProfileName("CharacterHitbox");
 
-	HealthPoints = 100.0f;// Default HealthPoints value
+	HealthPoints = 100;// Default HealthPoints value
 
-	RestoredHP = 10.0f;// Default HP restore
+	RestoredHP = 10;// Default HP restore
 	RestoreSpeed = 0.5f;// Default restore Speed
 	
 }
@@ -164,10 +164,10 @@ void AHeroCharacter::StopSprint()
 	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
 }
 
-void AHeroCharacter::ResolveDamage(float Damage)
+void AHeroCharacter::ResolveDamage(int32 Damage)
 {
 	// Only resolve damage if health is higher than zero to prevend broadcasting death multiple times
-	if (CurrentHealth > 0.0f)
+	if (CurrentHealth > 0)
 	{
 		CurrentHealth -= Damage;
 		UpdateUIHealth(CurrentHealth);
@@ -181,9 +181,9 @@ void AHeroCharacter::ResolveDamage(float Damage)
 					this, &AHeroCharacter::RestoreHealth, RestoreSpeed, true);
 			}
 		}
-		if (CurrentHealth <= 0.0f)
+		if (CurrentHealth <= 0)
 		{
-			CurrentHealth = 0.0f;
+			CurrentHealth = 0;
 			UWorld* World = GetWorld();
 			if (World)
 			{
@@ -228,12 +228,11 @@ void AHeroCharacter::RestoreHealth()
 	UpdateUIHealth(CurrentHealth);
 }
 
-void AHeroCharacter::UpdateUIHealth(float NewValue)
+void AHeroCharacter::UpdateUIHealth(int32 NewValue)
 {
 	AGameplayHUD* GameplayHUD = Cast<AGameplayHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 	if (GameplayHUD)
 	{
-		int32 IntValue = (int32)NewValue;
-		GameplayHUD->UpdateHealthText(IntValue);
+		GameplayHUD->UpdateHealthText(NewValue);
 	}
 }

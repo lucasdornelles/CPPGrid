@@ -17,7 +17,7 @@ AEnemyPawn::AEnemyPawn()
 	SphereComponent->InitSphereRadius(20.0f);
 	RootComponent = SphereComponent;
 
-	HealthPoints = 100.0f;// Default HealthPoints value
+	HealthPoints = 100;// Default HealthPoints value
 
 	EnemyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("EnemyMesh"));
 	EnemyMesh->SetupAttachment(RootComponent);
@@ -80,12 +80,12 @@ void AEnemyPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
 }
 
-void AEnemyPawn::ResolveDamage(float Damage)
+void AEnemyPawn::ResolveDamage(int32 Damage)
 {
 	// Lower Health
 	HealthPoints -= Damage;
 	// Destroy is less than zero
-	if (HealthPoints <= 0.0f)
+	if (HealthPoints <= 0)
 	{
 		Destroy();
 	}

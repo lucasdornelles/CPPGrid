@@ -33,10 +33,10 @@ class CPPGRID_API AHeroCharacter : public ACharacter, public IDamageableActorInt
 
 	// Set HealthPoints on Blueprint instance
 	UPROPERTY(EditAnywhere, Category = Gameplay, meta = (AllowPrivateAcess = "true"))
-	float HealthPoints;
+	int32 HealthPoints;
 
 	UPROPERTY(EditAnywhere, Category = Gameplay, meta = (AllowPrivateAcess = "true"))
-	float RestoredHP;
+	int32 RestoredHP;
 
 	UPROPERTY(EditAnywhere, Category = Gameplay, meta = (AllowPrivateAcess = "true"))
 	float RestoreSpeed;
@@ -52,7 +52,7 @@ public:
 	// Sets default values for this character's properties
 	AHeroCharacter();
 
-	float CurrentHealth;
+	int32 CurrentHealth;
 
 protected:
 	// Called when the game starts or when spawned
@@ -86,7 +86,7 @@ public:
 	void RestoreHealth();
 
 	// Pure c++ interface function
-	virtual void ResolveDamage(float Damage) override;
+	virtual void ResolveDamage(int32 Damage) override;
 
 protected:
 
@@ -129,6 +129,6 @@ private:
 
 	bool IsRestoringHealth;
 
-	void UpdateUIHealth(float newValue);
+	void UpdateUIHealth(int32 NewValue);
 
 };

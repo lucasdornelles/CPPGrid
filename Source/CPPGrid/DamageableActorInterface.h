@@ -22,5 +22,5 @@ class CPPGRID_API IDamageableActorInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void ResolveDamage(float Damage);
+	virtual void ResolveDamage(int32 Damage);
 };

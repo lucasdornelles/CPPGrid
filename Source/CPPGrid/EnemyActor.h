@@ -25,7 +25,7 @@ class CPPGRID_API AEnemyActor : public AActor, public IDamageableActorInterface
 
 	// Set HealthPoints on Blueprint instance
 	UPROPERTY(EditAnywhere, Category = Gameplay, meta = (AllowPrivateAcess = "true"))
-	float HealthPoints;
+	int32 HealthPoints;
 
 	// Arrow Component for firing projectile
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
@@ -73,7 +73,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// Pure c++ interface function
-	virtual void ResolveDamage(float Damage) override;
+	virtual void ResolveDamage(int32 Damage) override;
 
 	void Fire();
 

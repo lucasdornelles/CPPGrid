@@ -19,7 +19,7 @@ class CPPGRID_API AProjectileActor : public AActor
 
 	// Set DamagePoints on Blueprint instance
 	UPROPERTY(EditAnywhere, Category = Gameplay, meta = (AllowPrivateAcess = "true"))
-	float DamagePoints;
+	int32 DamagePoints;
 	
 public:	
 	// Sets default values for this actor's properties

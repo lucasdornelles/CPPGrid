@@ -5,7 +5,7 @@
 
 // Add default functionality here for any IDamageableActorInterface functions that are not pure virtual.
 
-void IDamageableActorInterface::ResolveDamage(float Damage)
+void IDamageableActorInterface::ResolveDamage(int32 Damage)
 {
 	return;
 }

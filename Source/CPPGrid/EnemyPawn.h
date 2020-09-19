@@ -25,7 +25,7 @@ class CPPGRID_API AEnemyPawn : public APawn, public IDamageableActorInterface
 
 	// Set HealthPoints on Blueprint instance
 	UPROPERTY(EditAnywhere, Category = Gameplay, meta = (AllowPrivateAcess = "true"))
-	float HealthPoints;
+	int32 HealthPoints;
 
 	// If a Movement component became necessary this can be used
 	//UPROPERTY(VisibleDefaultsOnly, Category = Movement)
@@ -69,7 +69,7 @@ public:
 	class UBehaviorTree* BehaviourTree;
 
 	// Pure c++ interface function
-	virtual void ResolveDamage(float Damage) override;
+	virtual void ResolveDamage(int32 Damage) override;
 
 private:
 	
