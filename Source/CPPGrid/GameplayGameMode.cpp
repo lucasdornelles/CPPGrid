@@ -11,20 +11,31 @@
 void AGameplayGameMode::BeginPlay()
 {
 	// GetPlayerCharacter and try to cast it to AHeroCharacter
-	AHeroCharacter*  PlayerPointer = Cast<AHeroCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	if (PlayerPointer)
+	UWorld* World = GetWorld();
+	if (World)
 	{
-		// If it succeds set player character reference
-		PlayerCharacter = PlayerPointer;
-		// And bind PlayerCharacterDeath event to listem to player death
-		PlayerCharacter->PlayerDeath.AddDynamic(this, &AGameplayGameMode::PlayerCharacterDeath);
+		AHeroCharacter*  PlayerPointer = Cast<AHeroCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+		if (PlayerPointer)
+		{
+			// If it succeds set player character reference
+			PlayerCharacter = PlayerPointer;
+			// And bind PlayerCharacterDeath event to listem to player death
+			PlayerCharacter->PlayerDeath.AddDynamic(this, &AGameplayGameMode::PlayerCharacterDeath);
+		}
 	}
 }
 
 void AGameplayGameMode::PossesCheckpoint()
 {
 	APawn* CheckpointPawn = Cast<APawn>(UGameplayStatics::GetActorOfClass(GetWorld(), ACheckpointPawn::StaticClass()));
-	UGameplayStatics::GetPlayerController(GetWorld(), 0)->Possess(CheckpointPawn);
+	if (CheckpointPawn)
+	{
+		UWorld* World = GetWorld();
+		if (World)
+		{
+			UGameplayStatics::GetPlayerController(World, 0)->Possess(CheckpointPawn);
+		}
+	}
 
 }
 

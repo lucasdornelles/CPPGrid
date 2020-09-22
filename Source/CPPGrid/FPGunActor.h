@@ -55,6 +55,8 @@ public:
 	// Clear timeline for auto fire
 	void DeactivateTrigger();
 
+	// Pointer to camera referece (UPROPERTY to prevent garbage collection)
+	UPROPERTY()
 	class UCameraComponent* CameraReference;
 
 	// Get CameraReference instead of player to prevent circular dependency

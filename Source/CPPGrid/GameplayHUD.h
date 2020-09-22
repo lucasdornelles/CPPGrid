@@ -6,7 +6,6 @@
 #include "GameFramework/HUD.h"
 
 #include "Components/WidgetComponent.h"
-#include "GameplayWidget.h"
 
 #include "GameplayHUD.generated.h"
 
@@ -31,11 +30,26 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Widget")
 	TSubclassOf<UUserWidget> GameplayWidgetClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Widget")
+	TSubclassOf<UUserWidget> PauseWidgetClass;
+
 	void UpdateHealthText(int32 NewValue);
+
+	void InitializeTotalHealth(int32 Value);
+
+	bool SwitchGamePause();
 
 private:
 
-	UGameplayWidget* GameplayWidget;
+	// Generatad Widgets pointers sems to become invalidated after some time if not decorated with UPROPERTY()
+
+	UPROPERTY()
+	class UGameplayWidget* GameplayWidget;
+
+	UPROPERTY()
+	class UPauseWidget* PauseWidget;
+
+	bool IsPaused;
 
 	
 };

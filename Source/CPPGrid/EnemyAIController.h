@@ -16,9 +16,11 @@ class CPPGRID_API AEnemyAIController : public AAIController
 	GENERATED_BODY()
 
 	// The Behavior tree component
+	UPROPERTY()
 	UBehaviorTreeComponent* BehaviorComp;
 
 	// The Blackboard Component
+	UPROPERTY()
 	UBlackboardComponent* BlackboardComp;
 	
 	UPROPERTY(EditDefaultsOnly, Category = AI)

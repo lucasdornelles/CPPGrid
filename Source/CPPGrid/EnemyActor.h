@@ -79,6 +79,7 @@ public:
 
 	void ResetEnemy();
 
+	UPROPERTY()
 	class ACharacter* PlayerCharacterRef;
 
 private:

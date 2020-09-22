@@ -33,5 +33,6 @@ public:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 private:
+	UPROPERTY()
 	APawn* Owner;
 };

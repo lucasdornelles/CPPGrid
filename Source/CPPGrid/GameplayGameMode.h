@@ -20,6 +20,7 @@ public:
 
 private:
 
+	UPROPERTY()
 	class AHeroCharacter* PlayerCharacter;
 
 	void PossesCheckpoint();

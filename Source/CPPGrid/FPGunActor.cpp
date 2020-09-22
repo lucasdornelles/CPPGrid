@@ -92,15 +92,23 @@ void AFPGunActor::ActivateTrigger()
 	Fire();
 	
 	// And Set timer for auto fire
-	GetWorld()->GetTimerManager().SetTimer(AutofireTimerHandle, this, &AFPGunActor::Fire, FireRate, true);
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		World->GetTimerManager().SetTimer(AutofireTimerHandle, this, &AFPGunActor::Fire, FireRate, true);
+	}
 }
 
 void AFPGunActor::DeactivateTrigger()
 {
 	// If timer is active, clear it
-	if (GetWorld()->GetTimerManager().IsTimerActive(AutofireTimerHandle))
+	UWorld* World = GetWorld();
+	if (World)
 	{
-		GetWorld()->GetTimerManager().ClearTimer(AutofireTimerHandle);
+		if (World->GetTimerManager().IsTimerActive(AutofireTimerHandle))
+		{
+			World->GetTimerManager().ClearTimer(AutofireTimerHandle);
+		}
 	}
 	// If timer is not active but not clear it will be substituted by a new one when the timer is set
 	// So we only need to check if it is active

@@ -13,5 +13,15 @@ UCLASS()
 class CPPGRID_API AHeroController : public APlayerController
 {
 	GENERATED_BODY()
-	
+
+protected:
+	virtual void SetupInputComponent() override;
+
+public:
+	UFUNCTION()
+	void SwitchPause();
+
+private:
+	bool IsGamePaused;
+
 };

@@ -70,7 +70,11 @@ void AHeroCharacter::BeginPlay()
 	}
 
 	CurrentHealth = HealthPoints;
-	UpdateUIHealth(CurrentHealth);
+	InitializeUITotalHealth(CurrentHealth);
+
+	// initialize booleans
+	IsFiring = false;
+	IsSprinting = false;
 }
 
 // Called every frame
@@ -110,6 +114,7 @@ void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AHeroCharacter::LookUpAtRate);
 	PlayerInputComponent->BindAxis("TurnRate", this, &AHeroCharacter::TurnAtRate);
 
+
 }
 
 void AHeroCharacter::MoveForward(float Value)
@@ -144,24 +149,38 @@ void AHeroCharacter::LookUpAtRate(float Rate)
 
 void AHeroCharacter::StartFire()
 {
-	IsFiring = true;
-	FP_Gun->ActivateTrigger();
+	if (!IsFiring)
+	{
+		IsFiring = true;
+		FP_Gun->ActivateTrigger();
+	}
 }
 
 void AHeroCharacter::EndFire()
 {
-	IsFiring = false;
-	FP_Gun->DeactivateTrigger();
+	if (IsFiring)
+	{
+		IsFiring = false;
+		FP_Gun->DeactivateTrigger();
+	}
 }
 
 void AHeroCharacter::StartSprint()
 {
-	GetCharacterMovement()->MaxWalkSpeed = BaseSprintSpeed;
+	if (!IsSprinting)
+	{
+		IsSprinting = true;
+		GetCharacterMovement()->MaxWalkSpeed = BaseSprintSpeed;
+	}
 }
 
 void AHeroCharacter::StopSprint()
 {
-	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
+	if (IsSprinting)
+	{
+		IsSprinting = false;
+		GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
+	}
 }
 
 void AHeroCharacter::ResolveDamage(int32 Damage)
@@ -199,6 +218,11 @@ void AHeroCharacter::ResolveDamage(int32 Damage)
 				EndFire();
 			}
 
+			if (IsSprinting)
+			{
+				StopSprint();
+			}
+
 			PlayerDeath.Broadcast();
 
 		}
@@ -234,5 +258,14 @@ void AHeroCharacter::UpdateUIHealth(int32 NewValue)
 	if (GameplayHUD)
 	{
 		GameplayHUD->UpdateHealthText(NewValue);
+	}
+}
+
+void AHeroCharacter::InitializeUITotalHealth(int32 Value)
+{
+	AGameplayHUD* GameplayHUD = Cast<AGameplayHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	if (GameplayHUD)
+	{
+		GameplayHUD->InitializeTotalHealth(Value);
 	}
 }

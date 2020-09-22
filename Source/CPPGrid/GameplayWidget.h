@@ -25,8 +25,21 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* HealthText;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	class UProgressBar* HealthBarLeft;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	class UProgressBar* HealthBarRight;
 	
 	UFUNCTION()
 	void UpdateHealthText(int32 NewValue);
+
+	UFUNCTION()
+	void InitializeTotalHealth(int32 Value);
+
+private:
+
+	float TotalHealth;
 	
 };

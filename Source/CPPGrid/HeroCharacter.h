@@ -29,6 +29,9 @@ class CPPGRID_API AHeroCharacter : public ACharacter, public IDamageableActorInt
 	UPROPERTY(EditAnywhere, Category = Weapon, meta = (AllowPrivateAcess = "true"))
 	TSubclassOf<class AFPGunActor> SpawnInfoFP_Gun;
 
+	//Sticked a UPROPERTY() just to be sure it is not garbage collected
+
+	UPROPERTY()
 	class AFPGunActor* FP_Gun;
 
 	// Set HealthPoints on Blueprint instance
@@ -130,5 +133,9 @@ private:
 	bool IsRestoringHealth;
 
 	void UpdateUIHealth(int32 NewValue);
+
+	void InitializeUITotalHealth(int32 Value);
+
+	bool IsSprinting;
 
 };

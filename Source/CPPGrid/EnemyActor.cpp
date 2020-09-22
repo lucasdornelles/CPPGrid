@@ -79,11 +79,15 @@ void AEnemyActor::BeginPlay()
 	}
 
 	// Try to get player character
-	ACharacter*  PlayerPointer = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	if (PlayerPointer)
+	UWorld* World = GetWorld();
+	if (World)
 	{
-		// If it succeds set player character reference, no need to cast
-		PlayerCharacterRef = PlayerPointer;
+		ACharacter*  PlayerPointer = UGameplayStatics::GetPlayerCharacter(World, 0);
+		if (PlayerPointer)
+		{
+			// If it succeds set player character reference, no need to cast
+			PlayerCharacterRef = PlayerPointer;
+		}
 	}
 
 }
@@ -96,19 +100,26 @@ void AEnemyActor::Tick(float DeltaTime)
 
 	if (IsPlayerVisible)
 	{
-		// If player is visible look at player
-		SetActorRotation(UKismetMathLibrary::FindLookAtRotation(GetActorLocation(),
-			PlayerCharacterRef->GetActorLocation()));
-
-		if (!IsFiring)
+		if (PlayerCharacterRef)
 		{
-			UWorld* World = GetWorld();
-			if (World)
-			{
-				World->GetTimerManager().SetTimer(AutofireTimerHandle, this, &AEnemyActor::Fire, FireRate, true);
+			// If player is visible look at player
+			SetActorRotation(UKismetMathLibrary::FindLookAtRotation(GetActorLocation(),
+				PlayerCharacterRef->GetActorLocation()));
 
+			if (!IsFiring)
+			{
+				UWorld* World = GetWorld();
+				if (World)
+				{
+					World->GetTimerManager().SetTimer(AutofireTimerHandle, this, &AEnemyActor::Fire, FireRate, true);
+
+				}
+				IsFiring = true;
 			}
-			IsFiring = true;
+		}
+		else
+		{
+			IsPlayerVisible = false;
 		}
 	}
 }
@@ -148,10 +159,13 @@ void AEnemyActor::ResolveDamage(int32 Damage)
 void AEnemyActor::VisionCapsuleOverlap(UPrimitiveComponent * OverlapComponent,
 	AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (OtherActor == PlayerCharacterRef)
+	if (PlayerCharacterRef)
 	{
-		// if overlaping actor is player character player character is visible
-		IsPlayerVisible = true;
+		if (OtherActor == PlayerCharacterRef)
+		{
+			// if overlaping actor is player character player character is visible
+			IsPlayerVisible = true;
+		}
 	}
 }
 
