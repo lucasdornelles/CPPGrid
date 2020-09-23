@@ -21,6 +21,9 @@ public:
 	UFUNCTION()
 	void SwitchPause();
 
+	UFUNCTION()
+	void ShowDeathMenu();
+
 private:
 	bool IsGamePaused;
 

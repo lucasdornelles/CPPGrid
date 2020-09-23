@@ -20,13 +20,40 @@ void AHeroController::SwitchPause()
 	{
 		if (IsPaused())
 		{
-			//bool bHUDPaused = GameplayHUD->SwitchGamePause();
-			SetPause(GameplayHUD->SwitchGamePause());
+			bool bHUDPaused = GameplayHUD->SwitchGamePause();
+			if (!bHUDPaused)
+			{
+				bShowMouseCursor = false;
+				SetInputMode(FInputModeGameOnly());
+				SetPause(bHUDPaused);
+			}
 		}
 		else
 		{
-			//bool bHUDPaused = GameplayHUD->SwitchGamePause();
-			SetPause(GameplayHUD->SwitchGamePause());
+			bool bHUDPaused = GameplayHUD->SwitchGamePause();
+			if (bHUDPaused)
+			{
+				FInputModeGameAndUI InputModeSettings;
+				InputModeSettings.SetLockMouseToViewportBehavior(EMouseLockMode::LockAlways);
+				bShowMouseCursor = true;
+				InputModeSettings.SetWidgetToFocus(GameplayHUD->GetPauseWidget()->TakeWidget());
+				SetInputMode(InputModeSettings);
+				SetPause(bHUDPaused);
+			}
 		}
+	}
+}
+
+void AHeroController::ShowDeathMenu()
+{
+	AGameplayHUD* GameplayHUD = Cast<AGameplayHUD>(GetHUD());
+	if (GameplayHUD)
+	{
+		GameplayHUD->ShowDeathMenu();
+		FInputModeGameAndUI InputModeSettings;
+		InputModeSettings.SetLockMouseToViewportBehavior(EMouseLockMode::LockAlways);
+		bShowMouseCursor = true;
+		InputModeSettings.SetWidgetToFocus(GameplayHUD->GetDeathWidget()->TakeWidget());
+		SetInputMode(InputModeSettings);
 	}
 }

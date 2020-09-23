@@ -3,6 +3,7 @@
 
 #include "GameplayHUD.h"
 #include "GameplayWidget.h"
+#include "DeathWidget.h"
 #include "PauseWidget.h"
 
 AGameplayHUD::AGameplayHUD()
@@ -18,7 +19,7 @@ void AGameplayHUD::DrawHUD()
 void AGameplayHUD::BeginPlay()
 {
 	IsPaused = false;
-	if(GameplayWidgetClass)
+	if (GameplayWidgetClass)
 	{
 		GameplayWidget = CreateWidget<UGameplayWidget>(GetWorld(), GameplayWidgetClass);
 		if (GameplayWidget)
@@ -26,8 +27,11 @@ void AGameplayHUD::BeginPlay()
 			GameplayWidget->AddToViewport();
 		}
 	}
-	if(PauseWidgetClass)
+	if (PauseWidgetClass)
 		PauseWidget = CreateWidget<UPauseWidget>(GetWorld(), PauseWidgetClass);
+
+	if (DeathWidgetClass)
+		DeathWidget = CreateWidget<UDeathWidget>(GetWorld(), DeathWidgetClass);
 }
 
 void AGameplayHUD::Tick(float DeltaSeconds)
@@ -56,7 +60,7 @@ bool AGameplayHUD::SwitchGamePause()
 			PauseWidget->RemoveFromViewport();
 			if (GameplayWidget && !GameplayWidget->IsInViewport())
 			GameplayWidget->AddToViewport();
-
+			
 			IsPaused = false;
 		}
 	}
@@ -66,10 +70,35 @@ bool AGameplayHUD::SwitchGamePause()
 		{
 			GameplayWidget->RemoveFromViewport();
 			if (PauseWidget && !PauseWidget->IsInViewport())
-			PauseWidget->AddToViewport();
+				PauseWidget->AddToViewport();
 			
 			IsPaused = true;
 		}
 	}
 	return IsPaused;
+}
+
+void AGameplayHUD::ShowDeathMenu()
+{
+	if (GameplayWidget && GameplayWidget->IsInViewport())
+	{
+		GameplayWidget->RemoveFromViewport();
+		if (DeathWidget && !DeathWidget->IsInViewport())
+			DeathWidget->AddToViewport();
+
+	}
+}
+
+UPauseWidget* AGameplayHUD::GetPauseWidget()
+{
+	
+	return PauseWidget;
+
+}
+
+UDeathWidget* AGameplayHUD::GetDeathWidget()
+{
+
+	return DeathWidget;
+
 }

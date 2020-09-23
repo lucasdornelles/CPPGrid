@@ -5,6 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "CheckpointPawn.h"
 #include "HeroCharacter.h"
+#include "HeroController.h"
 #include "GameplayHUD.h"
 #include "EnemyActor.h"
 
@@ -33,7 +34,12 @@ void AGameplayGameMode::PossesCheckpoint()
 		UWorld* World = GetWorld();
 		if (World)
 		{
-			UGameplayStatics::GetPlayerController(World, 0)->Possess(CheckpointPawn);
+			AHeroController* HeroController = Cast<AHeroController>(UGameplayStatics::GetPlayerController(World, 0));
+			if (HeroController)
+			{
+				HeroController->Possess(CheckpointPawn);
+				HeroController->ShowDeathMenu();
+			}
 		}
 	}
 

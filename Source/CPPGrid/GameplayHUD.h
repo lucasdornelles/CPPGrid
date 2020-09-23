@@ -6,6 +6,8 @@
 #include "GameFramework/HUD.h"
 
 #include "Components/WidgetComponent.h"
+#include "DeathWidget.h"
+#include "PauseWidget.h"
 
 #include "GameplayHUD.generated.h"
 
@@ -33,11 +35,24 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Widget")
 	TSubclassOf<UUserWidget> PauseWidgetClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Widget")
+	TSubclassOf<UUserWidget> DeathWidgetClass;
+
 	void UpdateHealthText(int32 NewValue);
 
 	void InitializeTotalHealth(int32 Value);
 
+	UFUNCTION()
 	bool SwitchGamePause();
+
+	UFUNCTION()
+	void ShowDeathMenu();
+
+	UFUNCTION()
+	UPauseWidget* GetPauseWidget();
+
+	UFUNCTION()
+	UDeathWidget* GetDeathWidget();
 
 private:
 
@@ -48,6 +63,9 @@ private:
 
 	UPROPERTY()
 	class UPauseWidget* PauseWidget;
+
+	UPROPERTY()
+	class UDeathWidget* DeathWidget;
 
 	bool IsPaused;
 

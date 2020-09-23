@@ -4,25 +4,24 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "PauseWidget.generated.h"
+#include "DeathWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class CPPGRID_API UPauseWidget : public UUserWidget
+class CPPGRID_API UDeathWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
 
 public:
 
-	UPauseWidget(const FObjectInitializer& ObjectInitializer);
+	UDeathWidget(const FObjectInitializer& ObjectInitializer);
 
 	virtual void NativeConstruct() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
-	class UButton* ReturnToGameB;
+	class UButton* ContinueB;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	class UButton* MainMenuB;
@@ -31,11 +30,12 @@ public:
 	class UButton* ExitGameB;
 
 	UFUNCTION()
-	void CReturnToGame();
+	void CContinue();
 
 	UFUNCTION()
 	void CMainMenu();
 
 	UFUNCTION()
 	void CExitGame();
+	
 };
