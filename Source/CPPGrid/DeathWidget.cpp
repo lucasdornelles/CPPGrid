@@ -26,6 +26,7 @@ void UDeathWidget::NativeConstruct()
 
 void UDeathWidget::CContinue()
 {
+	OnContinue.Broadcast();
 	return;
 }
 

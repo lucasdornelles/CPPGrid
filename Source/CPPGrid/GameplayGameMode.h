@@ -25,11 +25,16 @@ private:
 
 	void PossesCheckpoint();
 
+	void PossesPlayerCharacter();
+
 	void StopEnemyFire();
 
 public:
 
 	UFUNCTION()
 	void PlayerCharacterDeath();
+
+	UFUNCTION()
+	void RestartGame();
 	
 };

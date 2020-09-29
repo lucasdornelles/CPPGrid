@@ -6,6 +6,9 @@
 #include "Blueprint/UserWidget.h"
 #include "DeathWidget.generated.h"
 
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnContinue);
+
 /**
  * 
  */
@@ -37,5 +40,7 @@ public:
 
 	UFUNCTION()
 	void CExitGame();
+
+	FOnContinue OnContinue;
 	
 };

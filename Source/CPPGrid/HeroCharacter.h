@@ -91,6 +91,9 @@ public:
 	// Pure c++ interface function
 	virtual void ResolveDamage(int32 Damage) override;
 
+	UFUNCTION()
+	void ResetCharacter();
+
 protected:
 
 	/** Handles moving forward/backward */

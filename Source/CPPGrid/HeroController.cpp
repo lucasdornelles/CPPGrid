@@ -57,3 +57,15 @@ void AHeroController::ShowDeathMenu()
 		SetInputMode(InputModeSettings);
 	}
 }
+
+void AHeroController::ShowGameplayMenu()
+{
+	AGameplayHUD* GameplayHUD = Cast<AGameplayHUD>(GetHUD());
+	if (GameplayHUD)
+	{
+		FInputModeGameOnly InputModeSettings;
+		bShowMouseCursor = false;
+		SetInputMode(InputModeSettings);
+		GameplayHUD->ShowGameplayMenu();
+	}
+}

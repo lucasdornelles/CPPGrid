@@ -7,6 +7,7 @@
 #include "HeroCharacter.h"
 #include "HeroController.h"
 #include "GameplayHUD.h"
+#include "DeathWidget.h"
 #include "EnemyActor.h"
 
 void AGameplayGameMode::BeginPlay()
@@ -39,6 +40,14 @@ void AGameplayGameMode::PossesCheckpoint()
 			{
 				HeroController->Possess(CheckpointPawn);
 				HeroController->ShowDeathMenu();
+				AGameplayHUD* GameplayHUD = Cast<AGameplayHUD>(HeroController->GetHUD());
+				if (GameplayHUD)
+				{
+					if (!GameplayHUD->GetDeathWidget()->OnContinue.IsBound())
+					{
+						GameplayHUD->GetDeathWidget()->OnContinue.AddDynamic(this, &AGameplayGameMode::RestartGame);
+					}
+				}
 			}
 		}
 	}
@@ -65,4 +74,34 @@ void AGameplayGameMode::PlayerCharacterDeath()
 	StopEnemyFire();
 	PossesCheckpoint();
 	
+}
+
+void AGameplayGameMode::RestartGame()
+{
+	PossesPlayerCharacter();
+}
+
+void AGameplayGameMode::PossesPlayerCharacter()
+{
+	
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		AHeroController* HeroController = Cast<AHeroController>(UGameplayStatics::GetPlayerController(World, 0));
+		if (HeroController)
+		{
+			HeroController->Possess(PlayerCharacter);
+			PlayerCharacter->SetActorHiddenInGame(false);
+			//reset player character stats and position, remove death menu, add gameplay menu
+
+			APawn* CheckpointPawn = Cast<APawn>(UGameplayStatics::GetActorOfClass(GetWorld(), ACheckpointPawn::StaticClass()));
+			if (CheckpointPawn)
+			{
+				PlayerCharacter->SetActorLocationAndRotation(
+				CheckpointPawn->GetActorLocation(),CheckpointPawn->GetActorQuat());
+				HeroController->ShowGameplayMenu();
+				PlayerCharacter->ResetCharacter();
+			}
+		}
+	}
 }

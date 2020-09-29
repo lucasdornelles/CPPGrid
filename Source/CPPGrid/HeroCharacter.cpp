@@ -198,6 +198,7 @@ void AHeroCharacter::ResolveDamage(int32 Damage)
 			{
 				World->GetTimerManager().SetTimer(RestoreHealthTimerHandle,
 					this, &AHeroCharacter::RestoreHealth, RestoreSpeed, true);
+				IsRestoringHealth = true;//set here to not reinitialize timer if damage is dealt faster than restorespeed
 			}
 		}
 		if (CurrentHealth <= 0)
@@ -222,11 +223,17 @@ void AHeroCharacter::ResolveDamage(int32 Damage)
 			{
 				StopSprint();
 			}
-
+			UpdateUIHealth(CurrentHealth);
 			PlayerDeath.Broadcast();
 
 		}
 	}
+}
+
+void AHeroCharacter::ResetCharacter()
+{
+	CurrentHealth = HealthPoints;
+	UpdateUIHealth(CurrentHealth);
 }
 
 void AHeroCharacter::RestoreHealth()

@@ -23,6 +23,8 @@ void UPauseWidget::NativeConstruct()
 	
 	if (!ExitGameB->OnClicked.IsBound())
 		ExitGameB->OnClicked.AddDynamic(this, &UPauseWidget::CExitGame);
+
+	
 	
 }
 

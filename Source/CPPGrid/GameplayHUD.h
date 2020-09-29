@@ -49,6 +49,9 @@ public:
 	void ShowDeathMenu();
 
 	UFUNCTION()
+	void ShowGameplayMenu();
+
+	UFUNCTION()
 	UPauseWidget* GetPauseWidget();
 
 	UFUNCTION()

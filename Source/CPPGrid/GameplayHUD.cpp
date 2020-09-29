@@ -89,6 +89,18 @@ void AGameplayHUD::ShowDeathMenu()
 	}
 }
 
+void AGameplayHUD::ShowGameplayMenu()
+{
+	
+	if (DeathWidget && DeathWidget->IsInViewport())
+	{
+		DeathWidget->RemoveFromViewport();
+		if (GameplayWidget && !GameplayWidget->IsInViewport())
+			GameplayWidget->AddToViewport();
+
+	}
+}
+
 UPauseWidget* AGameplayHUD::GetPauseWidget()
 {
 	
