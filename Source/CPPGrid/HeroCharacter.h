@@ -7,9 +7,11 @@
 #include "FPGunActor.h"
 #include "DamageableActorInterface.h"
 #include "Components/TimelineComponent.h"
+#include "InteractableActorInterface.h"
 #include "HeroCharacter.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerDeath);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteract, EInteractableType, InteractType);
 
 UCLASS()
 class CPPGRID_API AHeroCharacter : public ACharacter, public IDamageableActorInterface
@@ -44,6 +46,12 @@ class CPPGRID_API AHeroCharacter : public ACharacter, public IDamageableActorInt
 	UPROPERTY(EditAnywhere, Category = Gameplay, meta = (AllowPrivateAcess = "true"))
 	float RestoreSpeed;
 
+	UPROPERTY(EditAnywhere, Category = Gameplay, meta = (AllowPrivateAcess = "true"))
+	float TraceDistance;
+
+	UPROPERTY(EditAnywhere, Category = Gameplay, meta = (AllowPrivateAcess = "true"))
+	float TraceRadius;
+
 	
 
 	// Timer for restore health
@@ -69,6 +77,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	FOnPlayerDeath PlayerDeath;
+	FOnInteract OnInteract;
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
@@ -130,6 +139,11 @@ protected:
 	void StartFire();
 
 	void EndFire();
+
+	/**
+	* Called via input to interact with a sphere sweep
+	*/
+	void Interact();
 
 private:
 

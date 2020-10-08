@@ -39,6 +39,7 @@ void AHeroController::SwitchPause()
 				InputModeSettings.SetWidgetToFocus(GameplayHUD->GetPauseWidget()->TakeWidget());
 				SetInputMode(InputModeSettings);
 				SetPause(bHUDPaused);
+				GameplayHUD->GetPauseWidget()->SetKeyboardFocus();
 			}
 		}
 	}

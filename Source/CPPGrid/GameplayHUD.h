@@ -57,6 +57,10 @@ public:
 	UFUNCTION()
 	UDeathWidget* GetDeathWidget();
 
+	void SetBlueKey(bool Held);
+	void SetGreenKey(bool Held);
+	void SetPinkKey(bool Held);
+
 private:
 
 	// Generatad Widgets pointers sems to become invalidated after some time if not decorated with UPROPERTY()

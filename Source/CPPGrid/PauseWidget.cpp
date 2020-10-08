@@ -24,8 +24,8 @@ void UPauseWidget::NativeConstruct()
 	if (!ExitGameB->OnClicked.IsBound())
 		ExitGameB->OnClicked.AddDynamic(this, &UPauseWidget::CExitGame);
 
-	
-	
+	bIsFocusable = true;
+
 }
 
 void UPauseWidget::CReturnToGame()
@@ -47,3 +47,4 @@ void UPauseWidget::CExitGame()
 {
 	FGenericPlatformMisc::RequestExit(false);
 }
+

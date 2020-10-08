@@ -22,6 +22,9 @@ void UDeathWidget::NativeConstruct()
 
 	if (!ExitGameB->OnClicked.IsBound())
 		ExitGameB->OnClicked.AddDynamic(this, &UDeathWidget::CExitGame);
+
+	bIsFocusable = true;
+
 }
 
 void UDeathWidget::CContinue()
@@ -39,3 +42,4 @@ void UDeathWidget::CExitGame()
 {
 	FGenericPlatformMisc::RequestExit(false);
 }
+

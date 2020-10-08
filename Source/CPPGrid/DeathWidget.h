@@ -42,5 +42,5 @@ public:
 	void CExitGame();
 
 	FOnContinue OnContinue;
-	
+
 };

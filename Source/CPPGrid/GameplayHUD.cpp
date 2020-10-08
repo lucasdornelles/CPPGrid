@@ -114,3 +114,18 @@ UDeathWidget* AGameplayHUD::GetDeathWidget()
 	return DeathWidget;
 
 }
+
+void AGameplayHUD::SetBlueKey(bool Held)
+{
+	GameplayWidget->SetBlueKey(Held);
+}
+
+void AGameplayHUD::SetGreenKey(bool Held)
+{
+	GameplayWidget->SetGreenKey(Held);
+}
+
+void AGameplayHUD::SetPinkKey(bool Held)
+{
+	GameplayWidget->SetPinkKey(Held);
+}

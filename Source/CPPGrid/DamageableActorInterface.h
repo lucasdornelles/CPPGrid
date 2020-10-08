@@ -14,7 +14,7 @@ class UDamageableActorInterface : public UInterface
 };
 
 /**
- * 
+ * Implement interface for actor to be damaged by projectiles
  */
 class CPPGRID_API IDamageableActorInterface
 {

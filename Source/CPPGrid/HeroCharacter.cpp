@@ -47,6 +47,10 @@ AHeroCharacter::AHeroCharacter()
 
 	RestoredHP = 10;// Default HP restore
 	RestoreSpeed = 0.5f;// Default restore Speed
+
+	TraceDistance = 300.0f;
+
+	TraceRadius = 100.0f;
 	
 }
 
@@ -113,6 +117,9 @@ void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	// Gamepad input
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AHeroCharacter::LookUpAtRate);
 	PlayerInputComponent->BindAxis("TurnRate", this, &AHeroCharacter::TurnAtRate);
+
+	// Bind Interact event
+	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AHeroCharacter::Interact);
 
 
 }
@@ -274,5 +281,29 @@ void AHeroCharacter::InitializeUITotalHealth(int32 Value)
 	if (GameplayHUD)
 	{
 		GameplayHUD->InitializeTotalHealth(Value);
+	}
+}
+
+void AHeroCharacter::Interact()
+{
+	// Interact whit actors implementing InteractableActorInterface
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		FVector Start = FirstPersonCameraComponent->GetComponentLocation();
+		FRotator Rotation = FirstPersonCameraComponent->GetComponentRotation();
+		FVector End = Start + (Rotation.Vector() * TraceDistance);
+
+		FCollisionQueryParams TraceParams(FName(TEXT("InteractTrace")), true, this);
+
+		FHitResult InteractHit = FHitResult(ForceInit);
+
+		bool bIsHit = World->SweepSingleByChannel(InteractHit, Start, End, Rotation.Quaternion(),
+			ECC_GameTraceChannel5, FCollisionShape::MakeSphere(18.0f), TraceParams);
+		if (bIsHit && InteractHit.GetActor()->Implements<UInteractableActorInterface>())
+		{
+			EInteractableType InteractType = Cast<IInteractableActorInterface>(InteractHit.GetActor())->Interact();
+			OnInteract.Broadcast(InteractType);
+		}
 	}
 }

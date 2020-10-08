@@ -9,6 +9,7 @@
 #include "GameplayHUD.h"
 #include "DeathWidget.h"
 #include "EnemyActor.h"
+#include "Engine.h"
 
 void AGameplayGameMode::BeginPlay()
 {
@@ -23,6 +24,7 @@ void AGameplayGameMode::BeginPlay()
 			PlayerCharacter = PlayerPointer;
 			// And bind PlayerCharacterDeath event to listem to player death
 			PlayerCharacter->PlayerDeath.AddDynamic(this, &AGameplayGameMode::PlayerCharacterDeath);
+			PlayerCharacter->OnInteract.AddDynamic(this, &AGameplayGameMode::ResolveInteract);
 		}
 	}
 }
@@ -103,5 +105,62 @@ void AGameplayGameMode::PossesPlayerCharacter()
 				PlayerCharacter->ResetCharacter();
 			}
 		}
+	}
+}
+
+void AGameplayGameMode::ResolveInteract(EInteractableType InteractType)
+{
+
+	AGameplayHUD* GameplayHUD = nullptr;
+
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		AHeroController* HeroController = Cast<AHeroController>(UGameplayStatics::GetPlayerController(World, 0));
+		if (HeroController)
+		{
+			GameplayHUD = Cast<AGameplayHUD>(HeroController->GetHUD());
+		}
+	}
+
+	switch (InteractType)
+	{
+
+	default:
+		break;
+
+	case EInteractableType::BLUEKEY:
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, TEXT("Blue"));
+		if (!IsHoldingBlueKey)
+			IsHoldingBlueKey = true;
+		if (GameplayHUD)
+			GameplayHUD->SetBlueKey(IsHoldingBlueKey);
+		break;
+
+	case EInteractableType::GREENKEY:
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, TEXT("Green"));
+		if (!IsHoldingGreenKey)
+			IsHoldingGreenKey = true;
+		if (GameplayHUD)
+			GameplayHUD->SetGreenKey(IsHoldingGreenKey);
+		break;
+
+	case EInteractableType::PINKKEY:
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, TEXT("Pink"));
+		if (!IsHoldingPinkKey)
+			IsHoldingPinkKey = true;
+		if (GameplayHUD)
+			GameplayHUD->SetPinkKey(IsHoldingPinkKey);
+		break;
+
+	case EInteractableType::BLUETOTEM:
+		break;
+
+	case EInteractableType::GREENTOTEM:
+		break;
+
+	case EInteractableType::PINKTOTEM:
+		break;
+
 	}
 }

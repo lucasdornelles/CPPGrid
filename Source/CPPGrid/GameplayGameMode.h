@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "InteractableActorInterface.h"
 #include "GameplayGameMode.generated.h"
 
 /**
@@ -29,6 +30,12 @@ private:
 
 	void StopEnemyFire();
 
+	bool IsHoldingBlueKey;
+
+	bool IsHoldingGreenKey;
+
+	bool IsHoldingPinkKey;
+
 public:
 
 	UFUNCTION()
@@ -36,5 +43,8 @@ public:
 
 	UFUNCTION()
 	void RestartGame();
+
+	UFUNCTION()
+	void ResolveInteract(EInteractableType InteractType);
 	
 };

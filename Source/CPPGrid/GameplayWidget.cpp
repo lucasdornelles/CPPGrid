@@ -26,3 +26,27 @@ void UGameplayWidget::InitializeTotalHealth(int32 Value)
 	TotalHealth = (float)Value;
 	UpdateHealthText(Value);
 }
+
+void UGameplayWidget::SetBlueKey(bool Held)
+{
+	if (Held)
+		KeyBlue->SetBrushFromTexture(TBlueKey);
+	else
+		KeyBlue->SetBrushFromTexture(TWhiteKey);
+}
+
+void UGameplayWidget::SetGreenKey(bool Held)
+{
+	if (Held)
+		KeyGreen->SetBrushFromTexture(TGreenKey);
+	else
+		KeyGreen->SetBrushFromTexture(TWhiteKey);
+}
+
+void UGameplayWidget::SetPinkKey(bool Held)
+{
+	if (Held)
+		KeyPink->SetBrushFromTexture(TPinkKey);
+	else
+		KeyPink->SetBrushFromTexture(TWhiteKey);
+}
