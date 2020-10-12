@@ -6,10 +6,10 @@
 #include "GameFramework/Actor.h"
 #include "Components/TimelineComponent.h"
 #include "InteractableActorInterface.h"
-#include "KeyActor.generated.h"
+#include "TotemActor.generated.h"
 
 UCLASS()
-class CPPGRID_API AKeyActor : public AActor, public IInteractableActorInterface
+class CPPGRID_API ATotemActor : public AActor, public IInteractableActorInterface
 {
 	GENERATED_BODY()
 
@@ -17,20 +17,24 @@ class CPPGRID_API AKeyActor : public AActor, public IInteractableActorInterface
 	class USphereComponent* SceneRoot;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	class UStaticMeshComponent* KeyOuterMesh;
+	class UBoxComponent* HitBox;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	UStaticMeshComponent* KeyMidleMesh;
+	UStaticMeshComponent* TotemBaseMesh;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	UStaticMeshComponent* KeyInnerMesh;
+	UStaticMeshComponent* RingMesh;
 
 	UPROPERTY(EditAnywhere, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 	EInteractableType InteractableType;
+
+	UPROPERTY(EditAnywhere, Category = Key, meta = (AllowPrivateAcess = "true"))
+	TSubclassOf<class AKeyActor> SpawnInfoKeyActor;
+
 	
 public:	
 	// Sets default values for this actor's properties
-	AKeyActor();
+	ATotemActor();
 
 	UFUNCTION()
 	void TimelineProgress(float Value);
@@ -41,14 +45,25 @@ protected:
 
 	FTimeline CurveTimeline;
 
-	//Curve to control floating movement
+	//Curve to control ring movement
 	UPROPERTY(EditAnywhere, Category = "Timeline")
 	UCurveFloat* CurveFloat;
+
+	UPROPERTY(EditAnywhere, Category = "Timeline")
+	float ZOffset;
+
+	UPROPERTY()
+	FVector StartLocation;
+
+	UPROPERTY()
+	FVector EndLocation;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	virtual EInteractableType Interact() override;
+
+	void ActivateTotem();
 
 };

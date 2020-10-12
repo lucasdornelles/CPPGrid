@@ -9,6 +9,7 @@
 #include "GameplayHUD.h"
 #include "DeathWidget.h"
 #include "EnemyActor.h"
+#include "TotemActor.h"
 #include "Engine.h"
 
 void AGameplayGameMode::BeginPlay()
@@ -17,7 +18,7 @@ void AGameplayGameMode::BeginPlay()
 	UWorld* World = GetWorld();
 	if (World)
 	{
-		AHeroCharacter*  PlayerPointer = Cast<AHeroCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+		AHeroCharacter*  PlayerPointer = Cast<AHeroCharacter>(UGameplayStatics::GetPlayerCharacter(World, 0));
 		if (PlayerPointer)
 		{
 			// If it succeds set player character reference
@@ -112,6 +113,9 @@ void AGameplayGameMode::ResolveInteract(EInteractableType InteractType)
 {
 
 	AGameplayHUD* GameplayHUD = nullptr;
+	ATotemActor* BlueTotem = nullptr;
+	ATotemActor* GreenTotem = nullptr;
+	ATotemActor* PinkTotem = nullptr;
 
 	UWorld* World = GetWorld();
 	if (World)
@@ -120,6 +124,20 @@ void AGameplayGameMode::ResolveInteract(EInteractableType InteractType)
 		if (HeroController)
 		{
 			GameplayHUD = Cast<AGameplayHUD>(HeroController->GetHUD());
+		}
+		
+		TArray<AActor*> OutActors;
+
+		UGameplayStatics::GetAllActorsOfClass(this, ATotemActor::StaticClass(), OutActors);
+
+		for (AActor* Actor : OutActors)
+		{
+			if (!IsValid(BlueTotem) && Actor->Tags.Contains(FName("BLUETOTEM")))
+				BlueTotem = Cast<ATotemActor>(Actor);
+			else if (!IsValid(GreenTotem) && Actor->Tags.Contains(FName("GREENTOTEM")))
+				GreenTotem = Cast<ATotemActor>(Actor);
+			else if (!IsValid(PinkTotem) && Actor->Tags.Contains(FName("PINKTOTEM")))
+				PinkTotem = Cast<ATotemActor>(Actor);
 		}
 	}
 
@@ -133,7 +151,7 @@ void AGameplayGameMode::ResolveInteract(EInteractableType InteractType)
 		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, TEXT("Blue"));
 		if (!IsHoldingBlueKey)
 			IsHoldingBlueKey = true;
-		if (GameplayHUD)
+		if (IsValid(GameplayHUD))
 			GameplayHUD->SetBlueKey(IsHoldingBlueKey);
 		break;
 
@@ -141,7 +159,7 @@ void AGameplayGameMode::ResolveInteract(EInteractableType InteractType)
 		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, TEXT("Green"));
 		if (!IsHoldingGreenKey)
 			IsHoldingGreenKey = true;
-		if (GameplayHUD)
+		if (IsValid(GameplayHUD))
 			GameplayHUD->SetGreenKey(IsHoldingGreenKey);
 		break;
 
@@ -149,17 +167,50 @@ void AGameplayGameMode::ResolveInteract(EInteractableType InteractType)
 		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, TEXT("Pink"));
 		if (!IsHoldingPinkKey)
 			IsHoldingPinkKey = true;
-		if (GameplayHUD)
+		if (IsValid(GameplayHUD))
 			GameplayHUD->SetPinkKey(IsHoldingPinkKey);
 		break;
 
 	case EInteractableType::BLUETOTEM:
+		if (IsHoldingBlueKey && !IsActiveBlueTotem)
+		{
+			if (IsValid(BlueTotem))
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, TEXT("BlueTotem"));
+				IsActiveBlueTotem = true;
+				//ResolveTotemActivation
+				BlueTotem->ActivateTotem();
+				break;
+			}
+		}
 		break;
 
 	case EInteractableType::GREENTOTEM:
+		if (IsHoldingGreenKey && !IsActiveGreenTotem)
+		{
+			if (IsValid(GreenTotem))
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, TEXT("GreenTotem"));
+				IsActiveGreenTotem = true;
+				//ResolveTotemActivation
+				GreenTotem->ActivateTotem();
+				break;
+			}
+		}
 		break;
 
 	case EInteractableType::PINKTOTEM:
+		if (IsHoldingPinkKey && !IsActivePinkTotem)
+		{
+			if (IsValid(PinkTotem))
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, TEXT("PinkTotem"));
+				IsActivePinkTotem = true;
+				//ResolveTotemActivation
+				PinkTotem->ActivateTotem();
+				break;
+			}
+		}
 		break;
 
 	}

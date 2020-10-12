@@ -31,10 +31,13 @@ private:
 	void StopEnemyFire();
 
 	bool IsHoldingBlueKey;
+	bool IsActiveBlueTotem;
 
 	bool IsHoldingGreenKey;
+	bool IsActiveGreenTotem;
 
 	bool IsHoldingPinkKey;
+	bool IsActivePinkTotem;
 
 public:
 
