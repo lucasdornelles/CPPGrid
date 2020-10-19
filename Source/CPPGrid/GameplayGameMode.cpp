@@ -10,6 +10,7 @@
 #include "DeathWidget.h"
 #include "EnemyActor.h"
 #include "TotemActor.h"
+#include "LevelPortalActor.h"
 #include "Engine.h"
 
 void AGameplayGameMode::BeginPlay()
@@ -26,6 +27,12 @@ void AGameplayGameMode::BeginPlay()
 			// And bind PlayerCharacterDeath event to listem to player death
 			PlayerCharacter->PlayerDeath.AddDynamic(this, &AGameplayGameMode::PlayerCharacterDeath);
 			PlayerCharacter->OnInteract.AddDynamic(this, &AGameplayGameMode::ResolveInteract);
+		}
+
+		ALevelPortalActor* LevelPortal = Cast<ALevelPortalActor>(UGameplayStatics::GetActorOfClass(GetWorld(), ALevelPortalActor::StaticClass()));
+		if (LevelPortal)
+		{
+			LevelPortal->PortalOverlapEvent.AddDynamic(this, &AGameplayGameMode::ChangeLevel);
 		}
 	}
 }
@@ -116,6 +123,7 @@ void AGameplayGameMode::ResolveInteract(EInteractableType InteractType)
 	ATotemActor* BlueTotem = nullptr;
 	ATotemActor* GreenTotem = nullptr;
 	ATotemActor* PinkTotem = nullptr;
+	ALevelPortalActor* LevelPortal = nullptr;
 
 	UWorld* World = GetWorld();
 	if (World)
@@ -125,6 +133,8 @@ void AGameplayGameMode::ResolveInteract(EInteractableType InteractType)
 		{
 			GameplayHUD = Cast<AGameplayHUD>(HeroController->GetHUD());
 		}
+
+		LevelPortal = Cast<ALevelPortalActor>(UGameplayStatics::GetActorOfClass(GetWorld(), ALevelPortalActor::StaticClass()));
 		
 		TArray<AActor*> OutActors;
 
@@ -180,6 +190,13 @@ void AGameplayGameMode::ResolveInteract(EInteractableType InteractType)
 				IsActiveBlueTotem = true;
 				//ResolveTotemActivation
 				BlueTotem->ActivateTotem();
+				if (IsValid(LevelPortal))
+				{
+					if (IsActiveBlueTotem && IsActiveGreenTotem && IsActivePinkTotem && !LevelPortal->IsPortalActive)
+					{
+						LevelPortal->AnimatePortal();
+					}
+				}
 				break;
 			}
 		}
@@ -195,6 +212,13 @@ void AGameplayGameMode::ResolveInteract(EInteractableType InteractType)
 				//ResolveTotemActivation
 				GreenTotem->ActivateTotem();
 				break;
+				if (IsValid(LevelPortal))
+				{
+					if (IsActiveBlueTotem && IsActiveGreenTotem && IsActivePinkTotem && !LevelPortal->IsPortalActive)
+					{
+						LevelPortal->AnimatePortal();
+					}
+				}
 			}
 		}
 		break;
@@ -208,10 +232,22 @@ void AGameplayGameMode::ResolveInteract(EInteractableType InteractType)
 				IsActivePinkTotem = true;
 				//ResolveTotemActivation
 				PinkTotem->ActivateTotem();
+				if (IsValid(LevelPortal))
+				{
+					if (IsActiveBlueTotem && IsActiveGreenTotem && IsActivePinkTotem && !LevelPortal->IsPortalActive)
+					{
+						LevelPortal->AnimatePortal();
+					}
+				}
 				break;
 			}
 		}
 		break;
 
 	}
+}
+
+void AGameplayGameMode::ChangeLevel()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, TEXT("LevelChange!!"));
 }

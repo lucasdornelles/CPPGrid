@@ -39,6 +39,7 @@ private:
 	bool IsHoldingPinkKey;
 	bool IsActivePinkTotem;
 
+
 public:
 
 	UFUNCTION()
@@ -49,5 +50,8 @@ public:
 
 	UFUNCTION()
 	void ResolveInteract(EInteractableType InteractType);
+
+	UFUNCTION()
+	void ChangeLevel();
 	
 };
