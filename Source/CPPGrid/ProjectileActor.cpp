@@ -3,6 +3,7 @@
 
 #include "ProjectileActor.h"
 #include "DamageableActorInterface.h"
+#include "Kismet/GameplayStatics.h"
 #include "Engine.h"
 
 // Sets default values
@@ -27,7 +28,7 @@ AProjectileActor::AProjectileActor()
 	ProjectileMovementComponent->InitialSpeed = 5000.0f;
 	ProjectileMovementComponent->MaxSpeed = 5000.0f;
 	ProjectileMovementComponent->bRotationFollowsVelocity = true;
-	
+
 
 }
 
@@ -40,6 +41,8 @@ void AProjectileActor::BeginPlay()
 
 	// SphereCollider OnComponentHit set here com compatibility with previously created blueprints
 	SphereCollider->OnComponentHit.AddDynamic(this, &AProjectileActor::OnCompHit);
+
+	
 	
 }
 
@@ -65,6 +68,10 @@ void AProjectileActor::OnCompHit(UPrimitiveComponent* HitComp, AActor* OtherActo
 	{
 		// Execute damage
 		Cast<IDamageableActorInterface>(OtherActor)->ResolveDamage(DamagePoints);
+		if (ParticleSystem)
+		{
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParticleSystem, GetActorLocation(), FRotator::ZeroRotator, true);
+		}
 	}
 
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, TEXT("HIT"));

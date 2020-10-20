@@ -11,6 +11,9 @@ class CPPGRID_API ACheckpointPawn : public APawn
 {
 	GENERATED_BODY()
 
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+	class UCapsuleComponent* SceneRoot;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* CameraComponent;
 

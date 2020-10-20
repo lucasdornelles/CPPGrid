@@ -96,6 +96,7 @@ void APortalActor::OnPortalOverlapBegin(UPrimitiveComponent* OverlappedComponent
 	UGameplayStatics::GetAllActorsOfClass(this, ATeleportTargetActor::StaticClass(), OutActors);
 
 	FVector TargetLocation = FVector(0.0f, 0.0f, 0.0f);
+	FRotator TargetRotation = FRotator(0.0f, 0.0f, 0.0f);
 	bool bTargetFound = false;
 	for (AActor* Actor : OutActors)
 	{
@@ -106,6 +107,7 @@ void APortalActor::OnPortalOverlapBegin(UPrimitiveComponent* OverlappedComponent
 			{
 				bTargetFound = true;
 				TargetLocation = Target->GetActorLocation();
+				TargetRotation = Target->GetActorRotation();
 			}
 		}
 	}
@@ -113,6 +115,7 @@ void APortalActor::OnPortalOverlapBegin(UPrimitiveComponent* OverlappedComponent
 	if (bTargetFound)
 	{
 		OtherActor->SetActorLocation(TargetLocation);
+		Cast<ACharacter>(OtherActor)->GetController()->SetControlRotation(TargetRotation);
 	}
 	else
 	{

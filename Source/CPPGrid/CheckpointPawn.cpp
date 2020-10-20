@@ -2,6 +2,7 @@
 
 
 #include "CheckpointPawn.h"
+#include "Components/CapsuleComponent.h"
 #include "Camera/CameraComponent.h"
 
 // Sets default values
@@ -9,6 +10,10 @@ ACheckpointPawn::ACheckpointPawn()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	SceneRoot = CreateDefaultSubobject<UCapsuleComponent>(TEXT("SceneRoot"));
+	SceneRoot->InitCapsuleSize(55.f, 96.0f);
+	RootComponent = SceneRoot;
 
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	CameraComponent->SetupAttachment(RootComponent);

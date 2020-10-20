@@ -109,6 +109,7 @@ void AGameplayGameMode::PossesPlayerCharacter()
 			{
 				PlayerCharacter->SetActorLocationAndRotation(
 				CheckpointPawn->GetActorLocation(),CheckpointPawn->GetActorQuat());
+				PlayerCharacter->GetController()->SetControlRotation(CheckpointPawn->GetActorRotation());
 				HeroController->ShowGameplayMenu();
 				PlayerCharacter->ResetCharacter();
 			}
@@ -211,7 +212,6 @@ void AGameplayGameMode::ResolveInteract(EInteractableType InteractType)
 				IsActiveGreenTotem = true;
 				//ResolveTotemActivation
 				GreenTotem->ActivateTotem();
-				break;
 				if (IsValid(LevelPortal))
 				{
 					if (IsActiveBlueTotem && IsActiveGreenTotem && IsActivePinkTotem && !LevelPortal->IsPortalActive)
@@ -219,6 +219,7 @@ void AGameplayGameMode::ResolveInteract(EInteractableType InteractType)
 						LevelPortal->AnimatePortal();
 					}
 				}
+				break;
 			}
 		}
 		break;
@@ -250,4 +251,10 @@ void AGameplayGameMode::ResolveInteract(EInteractableType InteractType)
 void AGameplayGameMode::ChangeLevel()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, TEXT("LevelChange!!"));
+
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		UGameplayStatics::OpenLevel(World, "02Boss");
+	}
 }
