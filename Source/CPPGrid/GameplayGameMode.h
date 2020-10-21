@@ -30,16 +30,6 @@ private:
 
 	void StopEnemyFire();
 
-	bool IsHoldingBlueKey;
-	bool IsActiveBlueTotem;
-
-	bool IsHoldingGreenKey;
-	bool IsActiveGreenTotem;
-
-	bool IsHoldingPinkKey;
-	bool IsActivePinkTotem;
-
-
 public:
 
 	UFUNCTION()
@@ -49,9 +39,9 @@ public:
 	void RestartGame();
 
 	UFUNCTION()
-	void ResolveInteract(EInteractableType InteractType);
+	virtual void ResolveInteract(EInteractableType InteractType);
 
 	UFUNCTION()
-	void ChangeLevel();
+	virtual void ChangeLevel();
 	
 };
