@@ -1,5 +1,4 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-//Q: Would experience in developing tools for numerical simulation research help me when aplying to a programmer position?
 
 #include "CreditsPlayerController.h"
 #include "Kismet/GameplayStatics.h"
