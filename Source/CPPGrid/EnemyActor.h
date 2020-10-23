@@ -34,6 +34,8 @@ class CPPGRID_API AEnemyActor : public AActor, public IDamageableActorInterface
 	// Timer for auto fire
 	FTimerHandle AutofireTimerHandle;
 
+	FTimerHandle RandonFireTimer;
+
 	UPROPERTY(EditAnywhere, Category = Weapon, meta = (AllowPrivateAcess = "true"))
 	float FirePerSecond;
 
@@ -82,6 +84,11 @@ public:
 	UPROPERTY()
 	class ACharacter* PlayerCharacterRef;
 
+	void RandomSetPlayerVisible();
+
+	UFUNCTION()
+	void SetPlayerVisible();
+
 private:
 	bool IsPlayerVisible;
 
@@ -96,4 +103,5 @@ private:
 	// Those will be discarded when respawn enemys is implemented
 	FRotator BeginPlayRotator;
 
+	
 };

@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "HeroController.generated.h"
+#include "CreditsPlayerController.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class CPPGRID_API AHeroController : public APlayerController
+class CPPGRID_API ACreditsPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
@@ -19,15 +19,9 @@ protected:
 
 public:
 	UFUNCTION()
-	void SwitchPause();
-
+	void ReturnToMenu();
+	
 	UFUNCTION()
-	void ShowDeathMenu();
-
-	UFUNCTION()
-	void ShowGameplayMenu();
-
-private:
-	bool IsGamePaused;
-
+	void ExitGame();
+	
 };

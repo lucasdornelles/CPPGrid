@@ -36,7 +36,7 @@ public:
 	void PlayerCharacterDeath();
 
 	UFUNCTION()
-	void RestartGame();
+	virtual void RestartGame();
 
 	UFUNCTION()
 	virtual void ResolveInteract(EInteractableType InteractType);

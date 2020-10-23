@@ -135,8 +135,11 @@ void AEnemyActor::ResolveDamage(int32 Damage)
 {
 	if (!IsPlayerVisible)
 	{
-		// If hit player character is visible
-		IsPlayerVisible = true;
+		if (!PlayerCharacterRef->IsHidden())
+		{
+			// If hit player character is visible
+			IsPlayerVisible = true;
+		}
 	}
 
 	// Lower Health
@@ -216,4 +219,19 @@ void AEnemyActor::ResetEnemy()
 	}
 	
 	SetActorRotation(BeginPlayRotator);
+}
+
+void AEnemyActor::RandomSetPlayerVisible()
+{
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		float PlayStart = FMath::FRandRange(1.0f, 1.5f);
+		World->GetTimerManager().SetTimer(RandonFireTimer, this, &AEnemyActor::SetPlayerVisible, PlayStart, false);
+	}
+}
+
+void AEnemyActor::SetPlayerVisible()
+{
+	IsPlayerVisible = true;
 }
