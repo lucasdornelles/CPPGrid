@@ -29,7 +29,7 @@ AProjectileActor::AProjectileActor()
 	ProjectileMovementComponent->MaxSpeed = 5000.0f;
 	ProjectileMovementComponent->bRotationFollowsVelocity = true;
 
-
+	
 }
 
 // Called when the game starts or when spawned
@@ -42,7 +42,10 @@ void AProjectileActor::BeginPlay()
 	// SphereCollider OnComponentHit set here com compatibility with previously created blueprints
 	SphereCollider->OnComponentHit.AddDynamic(this, &AProjectileActor::OnCompHit);
 
-	
+	if (SoundFire && AttenuationSettings)
+	{
+		UGameplayStatics::SpawnSoundAtLocation(this, SoundFire, GetActorLocation(), FRotator::ZeroRotator, FireVolume, 1.0f, 0.0f, AttenuationSettings);
+	}
 	
 }
 
@@ -74,7 +77,10 @@ void AProjectileActor::OnCompHit(UPrimitiveComponent* HitComp, AActor* OtherActo
 		}
 	}
 
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, TEXT("HIT"));
+	if (SoundHit && AttenuationSettings)
+	{
+		UGameplayStatics::SpawnSoundAtLocation(this, SoundHit, GetActorLocation(), FRotator::ZeroRotator, HitVolume, 1.0f, 0.0f, AttenuationSettings);
+	}
 	Destroy();
 	
 }

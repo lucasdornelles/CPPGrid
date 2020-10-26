@@ -11,9 +11,12 @@
 
 void ACreditsGameMode::BeginPlay()
 {
+	Super::BeginPlay();
 	UWorld* World = GetWorld();
 	if (World)
 	{
+		// Get Totem Actor and activate them
+
 		TArray<AActor*> OutActors;
 
 		UGameplayStatics::GetAllActorsOfClass(this, ATotemActor::StaticClass(), OutActors);
@@ -26,42 +29,21 @@ void ACreditsGameMode::BeginPlay()
 				TotemActor->ActivateTotem();
 			}
 		}
-
-		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(World, 0);
-		if (PlayerController)
-		{
-			AActor* CameraActor = UGameplayStatics::GetActorOfClass(this, ACameraActor::StaticClass());
-			if (CameraActor)
-			{
-				PlayerController->SetViewTarget(CameraActor);
-			}
-			
-		}
-
-		if (CreditsWidgetClass)
-		{
-			CreditsWidget = CreateWidget<UUserWidget>(World, CreditsWidgetClass);
-			CreditsWidget->AddToViewport();
-		}
 	}
 
-	
-
-	
+	// Play sound if setted on blueprint
+	if (SoundBase)
+	{
+		UGameplayStatics::SpawnSound2D(this, SoundBase);
+	}
 }
 
 void ACreditsGameMode::ChangeLevel()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, TEXT("BackToMenu..."));
-
+	//Return to MainMenu level
 	UWorld* World = GetWorld();
 	if (World)
 	{
-		//UGameplayStatics::OpenLevel(World, "00MainMenu");
+		UGameplayStatics::OpenLevel(World, "00MainMenu");
 	}
-}
-
-void ACreditsGameMode::ExitGame()
-{
-	FGenericPlatformMisc::RequestExit(false);
 }

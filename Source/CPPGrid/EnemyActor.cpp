@@ -28,6 +28,7 @@ AEnemyActor::AEnemyActor()
 	EnemyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("EnemyMesh"));
 	EnemyMesh->SetupAttachment(RootComponent);
 
+	// capsule component to simulate enemy vision
 	VisionCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("VisionCapsule"));
 	VisionCapsule->SetupAttachment(RootComponent);
 	VisionCapsule->InitCapsuleSize(400.0f, 800.0f);
@@ -112,7 +113,6 @@ void AEnemyActor::Tick(float DeltaTime)
 				if (World)
 				{
 					World->GetTimerManager().SetTimer(AutofireTimerHandle, this, &AEnemyActor::Fire, FireRate, true);
-
 				}
 				IsFiring = true;
 			}
@@ -223,6 +223,7 @@ void AEnemyActor::ResetEnemy()
 
 void AEnemyActor::RandomSetPlayerVisible()
 {
+	// Set a random timer to set IsPlayerVisible to true
 	UWorld* World = GetWorld();
 	if (World)
 	{

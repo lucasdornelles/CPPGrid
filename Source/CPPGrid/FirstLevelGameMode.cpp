@@ -15,15 +15,24 @@ void AFirstLevelGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Bind Change level functionality to levelportal
 	ALevelPortalActor* LevelPortal = Cast<ALevelPortalActor>(UGameplayStatics::GetActorOfClass(GetWorld(), ALevelPortalActor::StaticClass()));
 	if (LevelPortal)
 	{
 		LevelPortal->PortalOverlapEvent.AddDynamic(this, &AFirstLevelGameMode::ChangeLevel);
 	}
+
+	// Play sound if setted in blueprint
+	if (SoundBase)
+	{
+		UGameplayStatics::SpawnSound2D(this, SoundBase);
+	}
 }
 
 void AFirstLevelGameMode::ResolveInteract(EInteractableType InteractType)
 {
+
+	// Resolve the interaction event broadcast by the player character
 
 	AGameplayHUD* GameplayHUD = nullptr;
 	ATotemActor* BlueTotem = nullptr;
@@ -31,6 +40,8 @@ void AFirstLevelGameMode::ResolveInteract(EInteractableType InteractType)
 	ATotemActor* PinkTotem = nullptr;
 	ALevelPortalActor* LevelPortal = nullptr;
 
+	// Get the necessary pointer to resolve the interaction event
+	// It don't seems as expensive as it looks
 	UWorld* World = GetWorld();
 	if (World)
 	{
@@ -155,8 +166,7 @@ void AFirstLevelGameMode::ResolveInteract(EInteractableType InteractType)
 
 void AFirstLevelGameMode::ChangeLevel()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, TEXT("LevelChange!!"));
-
+	// Load boss level
 	UWorld* World = GetWorld();
 	if (World)
 	{

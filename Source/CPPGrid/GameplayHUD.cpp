@@ -19,6 +19,7 @@ void AGameplayHUD::DrawHUD()
 void AGameplayHUD::BeginPlay()
 {
 	IsPaused = false;
+	// Create HUD widgets and add gameplay widget to viewport
 	if (GameplayWidgetClass)
 	{
 		GameplayWidget = CreateWidget<UGameplayWidget>(GetWorld(), GameplayWidgetClass);
@@ -41,12 +42,14 @@ void AGameplayHUD::Tick(float DeltaSeconds)
 
 void AGameplayHUD::UpdateHealthText(int32 NewValue)
 {
+	// Pass new health value to gameplay widget
 	if (GameplayWidget)
 		GameplayWidget->UpdateHealthText(NewValue);
 }
 
 void AGameplayHUD::InitializeTotalHealth(int32 Value)
 {
+	// Pass new health value to gameplay widget
 	if (GameplayWidget)
 		GameplayWidget->InitializeTotalHealth(Value);
 }
@@ -57,7 +60,10 @@ bool AGameplayHUD::SwitchGamePause()
 	{
 		if (PauseWidget && PauseWidget->IsInViewport())
 		{
+			// If it is paused then should unpause
+			// Remove pause widget from viewport and add gameplay widget
 			PauseWidget->RemoveFromViewport();
+			// most of these checks are not needed but its good to be safe
 			if (GameplayWidget && !GameplayWidget->IsInViewport())
 			GameplayWidget->AddToViewport();
 			
@@ -68,6 +74,8 @@ bool AGameplayHUD::SwitchGamePause()
 	{
 		if (GameplayWidget && GameplayWidget->IsInViewport())
 		{
+			// If it is not paused the sould pause
+			// Remove gameplay widget from vieport and add pause widget
 			GameplayWidget->RemoveFromViewport();
 			if (PauseWidget && !PauseWidget->IsInViewport())
 				PauseWidget->AddToViewport();
@@ -75,6 +83,7 @@ bool AGameplayHUD::SwitchGamePause()
 			IsPaused = true;
 		}
 	}
+	// return if it paused or unpaused
 	return IsPaused;
 }
 
@@ -91,7 +100,7 @@ void AGameplayHUD::ShowDeathMenu()
 
 void AGameplayHUD::ShowGameplayMenu()
 {
-	
+	// called when game restarts
 	if (DeathWidget && DeathWidget->IsInViewport())
 	{
 		DeathWidget->RemoveFromViewport();

@@ -9,7 +9,7 @@
 ACheckpointPawn::ACheckpointPawn()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	SceneRoot = CreateDefaultSubobject<UCapsuleComponent>(TEXT("SceneRoot"));
 	SceneRoot->InitCapsuleSize(55.f, 96.0f);

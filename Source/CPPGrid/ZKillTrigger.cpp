@@ -14,9 +14,6 @@ AZKillTrigger::AZKillTrigger()
 void AZKillTrigger::BeginPlay()
 {
 	Super::BeginPlay();
-
-	//Debug Box
-	//DrawDebugBox(GetWorld(), GetActorLocation(), GetActorScale() * 100, FColor::Cyan, true, -1.0f, 0, 5);
 }
 
 void AZKillTrigger::OnOverlapBegin(class AActor* OverlappedActor, class AActor* OtherActor)

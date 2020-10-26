@@ -3,6 +3,7 @@
 
 #include "PauseWidget.h"
 #include "HeroController.h"
+#include "Kismet/GameplayStatics.h"
 #include "Runtime/UMG/Public/UMG.h"
 
 
@@ -40,7 +41,11 @@ void UPauseWidget::CReturnToGame()
 
 void UPauseWidget::CMainMenu()
 {
-	return;
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		UGameplayStatics::OpenLevel(World, "00MainMenu");
+	}
 }
 
 void UPauseWidget::CExitGame()

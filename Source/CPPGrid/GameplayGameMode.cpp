@@ -31,12 +31,14 @@ void AGameplayGameMode::BeginPlay()
 
 void AGameplayGameMode::PossesCheckpoint()
 {
+	// Get checkpoint pawn and cast to apawn
 	APawn* CheckpointPawn = Cast<APawn>(UGameplayStatics::GetActorOfClass(GetWorld(), ACheckpointPawn::StaticClass()));
 	if (CheckpointPawn)
 	{
 		UWorld* World = GetWorld();
 		if (World)
 		{
+			// Get Hero controller and posses checkpointpawn
 			AHeroController* HeroController = Cast<AHeroController>(UGameplayStatics::GetPlayerController(World, 0));
 			if (HeroController)
 			{
@@ -58,6 +60,7 @@ void AGameplayGameMode::PossesCheckpoint()
 
 void AGameplayGameMode::StopEnemyFire()
 {
+	// Get all enemy actor and reset player visibility and timers
 	TArray<AActor*> ActorArray;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemyActor::StaticClass(), ActorArray);
 	for (AActor* TActor : ActorArray)
@@ -72,6 +75,7 @@ void AGameplayGameMode::StopEnemyFire()
 
 void AGameplayGameMode::PlayerCharacterDeath()
 {
+	// hide player character when possessing checkpoint pawn
 	PlayerCharacter->SetActorHiddenInGame(true);
 	StopEnemyFire();
 	PossesCheckpoint();
@@ -85,7 +89,7 @@ void AGameplayGameMode::RestartGame()
 
 void AGameplayGameMode::PossesPlayerCharacter()
 {
-	
+	// Get hero character and controller, unhide and posses
 	UWorld* World = GetWorld();
 	if (World)
 	{
@@ -111,10 +115,12 @@ void AGameplayGameMode::PossesPlayerCharacter()
 
 void AGameplayGameMode::ResolveInteract(EInteractableType InteractType)
 {
+	// interact should be setted on child classes
 	return;
 }
 
 void AGameplayGameMode::ChangeLevel()
 {
+	// change level should be setted on child classes
 	return;
 }

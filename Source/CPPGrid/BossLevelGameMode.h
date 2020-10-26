@@ -27,4 +27,7 @@ public:
 	
 	UFUNCTION()
 	void CountEnemy();
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	class USoundBase* SoundBase;
 };

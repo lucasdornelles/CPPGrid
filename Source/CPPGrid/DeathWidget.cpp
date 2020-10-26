@@ -3,6 +3,7 @@
 
 #include "DeathWidget.h"
 #include "HeroController.h"
+#include "Kismet/GameplayStatics.h"
 #include "Runtime/UMG/Public/UMG.h"
 
 UDeathWidget::UDeathWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -14,6 +15,7 @@ void UDeathWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	// Bind functionality to UMG buttons
 	if (!ContinueB->OnClicked.IsBound())
 		ContinueB->OnClicked.AddDynamic(this, &UDeathWidget::CContinue);
 
@@ -35,7 +37,11 @@ void UDeathWidget::CContinue()
 
 void UDeathWidget::CMainMenu()
 {
-	return;
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		UGameplayStatics::OpenLevel(World, "00MainMenu");
+	}
 }
 
 void UDeathWidget::CExitGame()

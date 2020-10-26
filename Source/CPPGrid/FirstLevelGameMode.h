@@ -19,6 +19,9 @@ public:
 
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	class USoundBase* SoundBase;
+
 private:
 
 	bool IsHoldingBlueKey;

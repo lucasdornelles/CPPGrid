@@ -15,6 +15,7 @@ void ABossLevelGameMode::BeginPlay()
 
 	if (World)
 	{
+		// Get Enemys on boss level and activate then on a random timer for variability
 		TArray<AActor*> ActorArray;
 		UGameplayStatics::GetAllActorsOfClass(World, AEnemyActor::StaticClass(), ActorArray);
 		for (AActor* TActor : ActorArray)
@@ -25,7 +26,11 @@ void ABossLevelGameMode::BeginPlay()
 				EnemyActor->RandomSetPlayerVisible();
 			}
 		}
+
+		// Set a timer to count enemys to end the level
 		World->GetTimerManager().SetTimer(CountEnemyTimer, this, &ABossLevelGameMode::CountEnemy, 2.0f, true);
+
+		// Get the end level portal and bind changelevel to the overlap event
 		ALevelPortalActor* LevelPortal = Cast<ALevelPortalActor>(UGameplayStatics::GetActorOfClass(World, ALevelPortalActor::StaticClass()));
 		if (LevelPortal)
 		{
@@ -33,13 +38,17 @@ void ABossLevelGameMode::BeginPlay()
 		}
 	}
 
+	// If SoundBase was setted on the game mode blueprint play it
+	if (SoundBase)
+	{
+		UGameplayStatics::SpawnSound2D(this, SoundBase);
+	}
 	
 }
 
 void ABossLevelGameMode::ChangeLevel()
 {
-	//GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, TEXT("GameCleared!"));
-
+	// Open credits level when overlap with level portal
 	UWorld* World = GetWorld();
 	if (World)
 	{
@@ -49,8 +58,10 @@ void ABossLevelGameMode::ChangeLevel()
 
 void ABossLevelGameMode::RestartGame()
 {
+	// Call GameplayGameMode::RestartGame()
 	Super::RestartGame();
 	
+	// Reactivate enemys on a random timer
 	TArray<AActor*> ActorArray;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemyActor::StaticClass(), ActorArray);
 	for (AActor* TActor : ActorArray)
@@ -79,6 +90,8 @@ void ABossLevelGameMode::CountEnemy()
 			AEnemyActor* EnemyActor = Cast<AEnemyActor>(TActor);
 			if (EnemyActor)
 			{
+				// If it succed in casting TActor then it is a valid enemy
+				// increment enemy count
 				count++;
 			}
 		}
@@ -86,8 +99,8 @@ void ABossLevelGameMode::CountEnemy()
 		{
 			if (World->GetTimerManager().IsTimerActive(CountEnemyTimer))
 			{
+				// If enemy count is zero remove enemy counter timer and activate level portal
 				World->GetTimerManager().ClearTimer(CountEnemyTimer);
-				GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, TEXT("Cleared!!"));
 				ALevelPortalActor* LevelPortal = Cast<ALevelPortalActor>(UGameplayStatics::GetActorOfClass(World, ALevelPortalActor::StaticClass()));
 				if (LevelPortal)
 				{

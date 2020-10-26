@@ -48,6 +48,21 @@ public:
 
 	UFUNCTION()
 	void OnCompHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
-		UPrimitiveComponent* OtherComp, FVector NormalImpulse,const FHitResult& Hit);
+	UPrimitiveComponent* OtherComp, FVector NormalImpulse,const FHitResult& Hit);
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	float FireVolume;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	float HitVolume;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	class USoundAttenuation* AttenuationSettings;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	class USoundBase* SoundFire;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sound")
+	class USoundBase* SoundHit;
 
 };

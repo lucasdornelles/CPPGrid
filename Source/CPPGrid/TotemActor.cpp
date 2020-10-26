@@ -46,9 +46,6 @@ void ATotemActor::BeginPlay()
 		StartLocation.Z += 10.0f;
 		EndLocation.Z += ZOffset;
 	}
-
-	//Set Material Emissive
-	//TotemBaseMesh->SetScalarParameterValueOnMaterials("Emissive", 1000.0f);
 	
 }
 
