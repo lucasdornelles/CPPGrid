@@ -9,7 +9,7 @@
 #include "GameplayHUD.h"
 #include "TotemActor.h"
 #include "LevelPortalActor.h"
-#include "Engine.h"
+#include "Engine/World.h"
 
 void AFirstLevelGameMode::BeginPlay()
 {

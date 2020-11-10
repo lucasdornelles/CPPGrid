@@ -3,7 +3,7 @@
 
 #include "CreditsGameMode.h"
 #include "TotemActor.h"
-#include "Engine.h"
+#include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"

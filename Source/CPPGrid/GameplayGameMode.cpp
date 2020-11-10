@@ -9,7 +9,7 @@
 #include "GameplayHUD.h"
 #include "DeathWidget.h"
 #include "EnemyActor.h"
-#include "Engine.h"
+#include "Engine/World.h"
 
 void AGameplayGameMode::BeginPlay()
 {

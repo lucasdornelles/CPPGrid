@@ -2,7 +2,8 @@
 
 
 #include "PortalActor.h"
-#include "Engine.h"
+#include "Engine/World.h"
+#include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"

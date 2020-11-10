@@ -8,8 +8,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameplayHUD.h"
-#include "Engine.h"
-//Engine is temporary
+#include "Engine/World.h"
+
 
 // Sets default values
 AHeroCharacter::AHeroCharacter()

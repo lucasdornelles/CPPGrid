@@ -5,7 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "EnemyActor.h"
 #include "LevelPortalActor.h"
-#include "Engine.h"
+#include "Engine/World.h"
 
 void ABossLevelGameMode::BeginPlay()
 {

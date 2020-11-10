@@ -2,7 +2,6 @@
 
 
 #include "LevelPortalActor.h"
-#include "Engine.h"
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 

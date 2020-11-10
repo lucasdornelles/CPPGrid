@@ -3,7 +3,7 @@
 
 #include "FPGunActor.h"
 #include "Components/SkeletalMeshComponent.h"
-#include "Engine.h"
+#include "Engine/World.h"
 
 // Sets default values
 AFPGunActor::AFPGunActor()

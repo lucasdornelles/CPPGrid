@@ -4,7 +4,6 @@
 #include "ProjectileActor.h"
 #include "DamageableActorInterface.h"
 #include "Kismet/GameplayStatics.h"
-#include "Engine.h"
 
 // Sets default values
 AProjectileActor::AProjectileActor()
